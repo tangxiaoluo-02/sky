@@ -1233,54 +1233,65 @@
             <!-- 頁面標題動態更新為「ＯＯ的血淚史」 -->
             <h2 id="recordListTitle">ＯＯ的血淚史</h2>
 
-            <div class="filter-sort-container">
-                <h3>篩選與排序</h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="filterIncidentMonthStart">案發月份 (開始)</label>
-                        <input type="month" id="filterIncidentMonthStart" name="filterIncidentMonthStart">
+            <!-- 新增的 collapsible-section 包裹整個篩選排序功能 -->
+            <div class="collapsible-section" id="filterSortCollapsible">
+                <!-- 這是可折疊區塊的標頭，點擊它會展開或收起內容 -->
+                <button type="button" class="collapsible-header">
+                    <span>篩選與排序</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <!-- 這是可折疊區塊的內容，初始狀態是隱藏的 -->
+                <div class="collapsible-content">
+                    <div class="filter-sort-container">
+                        <!-- 原有的篩選與排序內容保持不變，但去除了原有的 <h3> 標籤，因為標題現在由 collapsible-header 提供 -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="filterIncidentMonthStart">案發月份 (開始)</label>
+                                <input type="month" id="filterIncidentMonthStart" name="filterIncidentMonthStart">
+                            </div>
+                            <div class="form-group">
+                                <label for="filterIncidentMonthEnd">案發月份 (結束)</label>
+                                <input type="month" id="filterIncidentMonthEnd" name="filterIncidentMonthEnd">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="filterStockName">股票名稱/代碼</label>
+                                <input type="text" id="filterStockName" name="filterStockName" placeholder="輸入股票名稱或代碼">
+                            </div>
+                            <div class="form-group">
+                                <label for="filterErrorDecisionType">錯誤決策類型</label>
+                                <select id="filterErrorDecisionType" name="filterErrorDecisionType">
+                                    <option value="">所有類型</option>
+                                    <option value="少賺">少賺</option>
+                                    <option value="遵守紀律，停損出場">遵守紀律，停損出場</option>
+                                    <option value="套牢很久後，終於停損">套牢很久後，終於停損</option>
+                                    <option value="套牢中等解套">套牢中等解套</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filterOperationType">操作類型</label>
+                                <select id="filterOperationType" name="filterOperationType">
+                                    <option value="">所有類型</option>
+                                    <option value="做多">做多</option>
+                                    <option value="做空">做空</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="sortOrder">排序方式</label>
+                                <select id="sortOrder" name="sortOrder">
+                                    <option value="incidentMonthDesc">案發月份 (新到舊)</option>
+                                    <option value="incidentMonthAsc">案發月份 (舊到新)</option>
+                                    <option value="recordDateDesc">紀錄日期 (新到舊)</option>
+                                    <option value="recordDateAsc">紀錄日期 (舊到新)</option>
+                                    <option value="outcomeAmountDesc">金額 (高到低)</option>
+                                    <option value="outcomeAmountAsc">金額 (低到高)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-sort-actions">
+                            <button type="button" id="clearFiltersBtn" class="button secondary clear-filters">清除篩選</button>
+                            <button type="button" id="applyFiltersBtn" class="button primary apply-filters">套用篩選</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="filterIncidentMonthEnd">案發月份 (結束)</label>
-                        <input type="month" id="filterIncidentMonthEnd" name="filterIncidentMonthEnd">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="filterStockName">股票名稱/代碼</label>
-                        <input type="text" id="filterStockName" name="filterStockName" placeholder="輸入股票名稱或代碼">
-                    </div>
-                    <div class="form-group">
-                        <label for="filterErrorDecisionType">錯誤決策類型</label>
-                        <select id="filterErrorDecisionType" name="filterErrorDecisionType">
-                            <option value="">所有類型</option>
-                            <option value="少賺">少賺</option>
-                            <option value="遵守紀律，停損出場">遵守紀律，停損出場</option>
-                            <option value="套牢很久後，終於停損">套牢很久後，終於停損</option>
-                            <option value="套牢中等解套">套牢中等解套</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filterOperationType">操作類型</label>
-                        <select id="filterOperationType" name="filterOperationType">
-                            <option value="">所有類型</option>
-                            <option value="做多">做多</option>
-                            <option value="做空">做空</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="sortOrder">排序方式</label>
-                        <select id="sortOrder" name="sortOrder">
-                            <option value="incidentMonthDesc">案發月份 (新到舊)</option>
-                            <option value="incidentMonthAsc">案發月份 (舊到新)</option>
-                            <option value="recordDateDesc">紀錄日期 (新到舊)</option>
-                            <option value="recordDateAsc">紀錄日期 (舊到新)</option>
-                            <option value="outcomeAmountDesc">金額 (高到低)</option>
-                            <option value="outcomeAmountAsc">金額 (低到高)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="filter-sort-actions">
-                    <button type="button" id="clearFiltersBtn" class="button secondary clear-filters">清除篩選</button>
-                    <button type="button" id="applyFiltersBtn" class="button primary apply-filters">套用篩選</button>
                 </div>
             </div>
 
@@ -1370,9 +1381,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" nonce="MzgwNDk0ODE1MiwyOTUxNjg1NDY0"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" nonce="MzgwNDk0ODE1MiwyOTUxNjg1NDY0"></script>
-    <script nonce="MzgwNDk0ODE1MiwyOTUxNjg1NDY0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" nonce="MTU0MjIwMjE2MywzMTUyNzY5NTQy"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" nonce="MTU0MjIwMjE2MywzMTUyNzY5NTQy"></script>
+    <script nonce="MTU0MjIwMjE2MywzMTUyNzY5NTQy">
         // DOM Elements
         const showListBtn = document.getElementById('showListBtn');
         const showFormBtn = document.getElementById('showFormBtn');
@@ -2999,6 +3010,14 @@
             incidentMonthInput.value = currentMonth;
 
             toggleOutcomeDetails(); // Ensure initial state of new fields is correct
+            // 確保「篩選與排序」區塊在載入時是收起狀態
+            const filterSortHeader = document.querySelector('#filterSortCollapsible .collapsible-header');
+            const filterSortContent = document.querySelector('#filterSortCollapsible .collapsible-content');
+            if (filterSortHeader && filterSortContent) {
+                // 確保 header 沒有 'open' class，content 顯示為 'none'
+                filterSortHeader.classList.remove('open');
+                filterSortContent.style.display = 'none';
+            }
         });
 
     </script>
