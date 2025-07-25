@@ -1,0 +1,3006 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>韭菜OO的錯題本</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8; /* Very light, soft background */
+            color: #4a4a4a; /* Softer dark text */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-osx-font-smoothing: grayscale;
+	    text-rendering: optimizeLegibility; /* 優化文字渲染 */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px 16px; /* More vertical padding */
+            display: flex; /* Use flexbox for layout */
+            flex-direction: column; /* Stack children vertically */
+            min-height: 100vh; /* Ensure container takes full viewport height */
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #F0F4F8;
+            box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.06); /* Shadow on top for bottom nav */
+            padding: 6px 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: sticky;
+            bottom: 0; /* Position at the bottom */
+            z-index: 10;
+            border-radius: 16px 16px 0 0; /* Rounded top corners, flat bottom */
+            margin-top: auto; /* Push nav to the bottom */
+            border: 1px solid #e0e0e0; /* Subtle border */
+            border-bottom: none; /* No bottom border */
+            width: 100%; /* Ensure it spans full width */
+            box-sizing: border-box; /* Include padding and border in width */
+        }
+
+        nav button {
+            background-color: transparent;
+            border: none;
+            padding: 6px 12px; /* Larger tap target */
+            border-radius: 12px; /* More rounded */
+            font-weight: 600;
+            font-size: 14px; /* Slightly larger font */
+            color: #888888; /* Muted gray */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        nav button:hover {
+            background-color: #D9E2EC; /* Lighter hover */
+            color: #666666;
+        }
+
+        nav button.active {
+            background-color: #BCCCDC; /* Soft pastel blue */
+            color: #3a5a70; /* Darker blue text */
+            box-shadow: 0 4px 10px rgba(176, 216, 240, 0.5); /* Soft blue shadow */
+            transform: translateY(-3px); /* Slight lift */
+            border: 1px solid #90c0e0; /* Subtle active border */
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+            padding-bottom: 90px; /* More padding for mobile navigation */
+            flex-grow: 1; /* Allow page sections to grow and fill space */
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 25px; /* Larger heading */
+            font-weight: 700;
+            color: #333333; /* Darker heading color */
+            margin-bottom: 15px; /* More space below heading */
+            text-align: center;
+            letter-spacing: -0.03em; /* Slightly tighter letter spacing */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Very subtle text shadow */
+        }
+
+        /* Card-like sections */
+        .card {
+            background-color: #ffffff;
+            padding: 28px; /* More padding */
+            border-radius: 16px; /* More rounded */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06); /* Softer, larger shadow */
+            margin-bottom: 28px;
+            border: 1px solid #e8e8e8; /* Lighter border */
+        }
+
+        h3 {
+            font-size: 22px; /* Larger sub-heading */
+            font-weight: 600;
+            color: #555555; /* Darker sub-heading color */
+            margin-bottom: 24px; /* More space below sub-heading */
+            border-bottom: 1px solid #f0f0f0; /* Subtle separator */
+            padding-bottom: 14px;
+            text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.03); /* Very subtle text shadow */
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 24px; /* More space between form groups */
+            width: 100%; /* Ensure form-group takes full width */
+            box-sizing: border-box; /* Important for padding/border calculation */
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 15px; /* Slightly larger font */
+            font-weight: 500;
+            color: #666666; /* Medium gray */
+            margin-bottom: 10px; /* More space below label */
+        }
+        /* Specific style for "其他" label */
+        .specific-label {
+            font-size: 20px; /* Larger font for this specific label */
+            font-weight: 800; /* Make it bold */
+            color: #333333; /* Darker color for emphasis */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="month"], /* Added month type */
+        .form-group input[type="number"],
+        .form-group select { /* Added select here */
+            display: block;
+            width: 100%;
+            padding: 14px 16px; /* Larger padding */
+            border: 1px solid #dcdcdc; /* Lighter border */
+            border-radius: 10px; /* More rounded */
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.04); /* Subtle inner shadow */
+            font-size: 18px; /* Larger font for readability */
+            color: #333333;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-sizing: border-box; /* Crucial for correct width calculation */
+        }
+       
+        /* Specific styling for textarea and static-text-box */
+        textarea,
+        .static-text-box {
+            display: block;
+            width: 100%; /* Ensure it fills parent */
+            padding: 14px 16px; /* Consistent padding */
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.04);
+            font-size: 18px; /* Explicitly set font size to 18px */
+            color: #333333;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-sizing: border-box;
+            line-height: 1.6; /* Improve readability for multi-line text */
+        }
+
+        #summary { /* Specific styling for summary textarea */
+            min-height: 250px; /* Increased height for summary */
+        }
+
+        /* Focus styles for all relevant input types and textarea */
+        .form-group input[type="text"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group input[type="month"]:focus, /* Added month type */
+        .form-group input[type="number"]:focus,
+        .form-group select:focus, /* Added select here */
+        textarea:focus { /* Added textarea here */
+            outline: none;
+            border-color: #90c0e0; /* Soft blue focus */
+            box-shadow: 0 0 0 4px rgba(176, 216, 240, 0.4); /* Soft blue glow */
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px; /* More space between options */
+            margin-top: 10px;
+        }
+
+        .radio-group label, .checkbox-group label {
+            display: inline-flex;
+            align-items: center;
+            font-weight: 400;
+            color: #4a4a4a;
+            cursor: pointer;
+            font-size: 17px; /* Larger font */
+        }
+
+        .radio-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 12px; /* More space */
+            width: 22px; /* Larger target */
+            height: 22px; /* Larger target */
+            border: 2px solid #b0b0b0; /* Thicker border */
+            border-radius: 50%; /* For radio */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+        }
+
+        .radio-group input[type="radio"]:checked {
+            background-color: #b0d8f0;
+            border-color: #b0d8f0;
+            box-shadow: inset 0 0 0 6px #fff; /* Inner circle effect */
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            border-radius: 8px; /* Slightly more rounded checkbox */
+        }
+
+        .checkbox-group input[type="checkbox"]:checked {
+            background-color: #b0d8f0;
+            border-color: #b0d8f0;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            content: '✓';
+            color: #fff;
+            font-size: 16px; /* Larger checkmark */
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+
+        /* Collapsible Section */
+        .collapsible-section {
+            margin-bottom: 18px; /* Space between collapsible sections */
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 18px 22px; /* More padding */
+            text-align: left;
+            font-weight: 600;
+            color: #555555;
+            background-color: #fdfdfd; /* Very light background for header */
+            border: 1px solid #e8e8e8;
+            border-radius: 12px; /* More rounded */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04); /* Subtle shadow */
+            box-sizing: border-box; /* Ensure padding/border included in width */
+        }
+
+        .collapsible-header:hover {
+            background-color: #f5f5f5; /* Light hover */
+            border-color: #d0d0d0;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .collapsible-header.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            background-color: #e8f5ff; /* Soft blue when open */
+            color: #3a5a70;
+            border-color: #c0e0f0;
+        }
+        
+        .collapsible-header span { /* Specific styling for the text inside collapsible header */
+            font-size: 17px; /* Applied 17px here */
+        }
+
+        .collapsible-header svg {
+            width: 26px; /* Larger icon */
+            height: 26px;
+            transform: rotate(0deg);
+            transition: transform 0.3s ease-in-out;
+            color: #888888; /* Muted icon color */
+        }
+
+        .collapsible-header.open svg {
+            transform: rotate(180deg);
+            color: #b0d8f0; /* Blue icon when open */
+        }
+
+        .collapsible-content {
+            padding: 22px; /* More padding */
+            border: 1px solid #e8e8e8;
+            border-top: none;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            background-color: #ffffff;
+            margin-top: 0;
+            display: none; /* Default to hidden */
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.04); /* Subtle shadow for content */
+            box-sizing: border-box; /* Ensure padding/border included in width */
+        }
+
+        .collapsible-content.open {
+            display: block !important; /* Force display block when open, for debugging */
+        }
+
+        /* Custom text colors for analysis reminder */
+        .blue-text {
+            color: #2828FF; /* Darker blue, from active nav button text */
+            font-weight: 600; /* Make it slightly bold for emphasis */
+            font-size: 18px; /* Ensure font size is consistent */
+        }
+        .black-text {
+            color: #4a4a4a; /* Default body text color */
+            font-size: 18px; /* Ensure font size is consistent */
+        }
+        .red-text {
+            color: #FF0000; /* Darker red, from danger button text */
+            font-weight: 600; /* Make it slightly bold for emphasis */
+            font-size: 18px; /* Ensure font size is consistent */
+        }
+
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 18px; /* More space */
+            margin-top: 36px; /* More space above buttons */
+        }
+
+        .button {
+            padding: 14px 32px; /* Larger padding */
+            border-radius: 10px; /* More rounded */
+            font-weight: 600;
+            font-size: 17px; /* Larger font */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            border: none;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08); /* Consistent shadow */
+        }
+
+        .button.primary {
+            background-color: #b0d8f0; /* Soft blue */
+            color: #3a5a70;
+        }
+
+        .button.primary:hover {
+            background-color: #90c0e0;
+            box-shadow: 0 7px 15px rgba(176, 216, 240, 0.6);
+        }
+
+        .button.secondary {
+            background-color: #e0e0e0; /* Soft gray */
+            color: #666666;
+        }
+
+        .button.secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .button.danger {
+            background-color: #ffb0b0; /* Soft red */
+            color: #8a3a3a;
+        }
+
+        .button.danger:hover {
+            background-color: #ff9090;
+            box-shadow: 0 7px 15px rgba(255, 176, 176, 0.6);
+        }
+
+        .button.success {
+            background-color: #b0f0d0; /* Soft green */
+            color: #3a705a;
+        }
+
+        .button.success:hover {
+            background-color: #90e0b0;
+            box-shadow: 0 7px 15px rgba(176, 240, 208, 0.6);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Record List */
+        .record-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px; /* More space between records */
+        }
+
+        .record-item {
+            background-color: #ffffff;
+            padding: 28px; /* More padding */
+            border-radius: 16px; /* More rounded */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8e8e8;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .record-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .record-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px; /* More space */
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .record-item-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #333333;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .record-actions {
+            display: flex;
+            gap: 12px; /* More space */
+        }
+
+        .record-actions button {
+            background-color: #f0f0f0; /* Lighter background for action buttons */
+            border: none;
+            border-radius: 50%;
+            width: 44px; /* Larger tap target */
+            height: 44px; /* Larger tap target */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            color: #4a4a4a;
+        }
+
+        .record-actions button:hover {
+            background-color: #e0e0e0;
+        }
+        /* 【新增或確認】為按鈕內部的 SVG 圖標設置樣式 */
+        .record-actions button svg {
+            width: 20px;  /* 確保 SVG 的寬度正確，與 HTML 中的 w-5 h-5 類別對應 */
+            height: 20px; /* 確保 SVG 的高度正確 */
+            stroke-width: 2; /* 再次強調描邊寬度為 2px，確保線條清晰可見 */
+            /* 這裡可以明確指定描邊顏色為繼承按鈕的顏色，確保有效 */
+            stroke: currentColor;
+            /* 如果圖標依然不顯示，可以嘗試將 fill 設定為 currentColor。
+            這會將圖標內部填色，而不是只顯示線條。
+            但這取決於您圖標的設計（是否適合填色）。
+            您可以先不加這行，如果還是不行再嘗試。*/
+            /* fill: currentColor; */
+        }
+        .record-actions button.edit-btn {
+            color: #3a5a70; /* Darker blue */
+        }
+        .record-actions button.edit-btn:hover {
+            background-color: #d0e8f8; /* Lighter blue hover */
+        }
+
+        .record-actions button.delete-btn {
+            color: #8a3a3a; /* Darker red */
+        }
+        .record-actions button.delete-btn:hover {
+            background-color: #ffcccc; /* Lighter red hover */
+        }
+        .record-actions button.export-btn {
+            color: #3a705a; /* Darker green */
+        }
+        .record-actions button.export-btn:hover {
+            background-color: #d0f8d0; /* Lighter green hover */
+        }
+        /* Style for the new add annotation button */
+        .record-actions .add-annotation-btn {
+            color: #5a3a70; /* Purple-ish color */
+        }
+        .record-actions .add-annotation-btn:hover {
+            background-color: #e8d0f8; /* Lighter purple hover */
+        }
+
+
+        .record-detail p {
+            font-size: 16px; /* Slightly larger font */
+            color: #4a4a4a;
+            margin-bottom: 8px; /* More space */
+            line-height: 1.6; /* Better readability */
+        }
+
+        .record-detail strong {
+            font-weight: 600;
+            color: #333333;
+        }
+
+        /* Adjusted class names for profit/loss/normal based on new logic */
+        /* 根據台灣股市習慣調整顏色：賺錢相關為紅色，虧損相關為綠色 */
+        .record-detail .result-profit {
+            color: #ef4444; /* 紅色，代表賺錢或解套 */
+            font-weight: 700;
+        }
+
+        .record-detail .result-loss {
+            color: #10b981; /* 綠色，代表虧損或少賺 */
+            font-weight: 700;
+        }
+        .record-detail .result-normal { /* For neutral or unknown */
+            color: #4a4a4a;
+            font-weight: 700;
+        }
+
+        /* Styling for the new outcome details layout */
+        .outcome-details-block {
+            margin-top: 10px;
+            padding-left: 20px;
+            border-left: 3px solid #e0e0e0;
+            margin-bottom: 15px;
+        }
+        .outcome-details-block p {
+            margin: 5px 0;
+            font-size: 15px;
+        }
+
+        .record-section-divider {
+            border-top: 1px solid #f0f0f0; /* Lighter divider */
+            padding-top: 18px; /* More padding */
+            margin-top: 18px;
+        }
+
+        .record-section-divider ul {
+            list-style: disc;
+            padding-left: 28px; /* More indent */
+            margin: 0;
+        }
+
+        .record-section-divider ul li {
+            font-size: 16px;
+            color: #4a4a4a;
+            margin-bottom: 6px;
+        }
+
+        .no-records {
+            text-align: center;
+            color: #888888;
+            padding: 40px; /* More padding */
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            font-size: 17px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh; /* 使用 vh 單位確保覆蓋整個視口高度 */
+            background-color: rgba(0, 0, 0, 0.4); /* Softer overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 24px;
+            box-sizing: border-box; /* 確保 padding 包含在 width 和 height 內 */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 16px; /* More rounded */
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            padding: 36px; /* More padding */
+            width: 100%;
+            max-width: 450px; /* Slightly wider */
+            text-align: center;
+            min-width: 280px; /* 根據需要調整，防止內容過窄 */
+        }
+        
+        /* 確保 modal-content 不會因為過大的 padding 溢出小螢幕 */
+        @media (max-width: 480px) { /* 當螢幕寬度小於或等於 480px 時應用 */
+            .modal-content {
+                padding: 20px; /* 在小螢幕上減少內邊距 */
+                margin: 0 15px; /* 增加左右外邊距，防止貼邊 */
+            }
+            /* 如果內容文字在小螢幕上太擠，可以稍微調整字體大小 */
+            .modal-content p {
+                font-size: 16px;
+            }
+        }
+        .modal-content h3 {
+            font-size: 24px; /* Larger heading */
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #333333;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .modal-content p {
+            font-size: 17px; /* Larger message */
+            color: #4a4a4a;
+            margin-bottom: 32px; /* More space */
+            line-height: 1.7;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 14px;
+        }
+
+        /* Chart Styling (for Analysis) */
+        .chart-container {
+            background-color: #ffffff;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .chart-container h3 {
+            text-align: center;
+            margin-bottom: 28px; /* More space below chart title */
+        }
+
+        .chart-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 40px; /* Space between charts */
+            align-items: center;
+        }
+
+        .chart-canvas-wrapper {
+            width: 100%;
+            max-width: 400px; /* Max width for charts to look good on larger screens */
+        }
+
+        #barChartCanvas, #pieChartCanvas {
+            display: block;
+            width: 100%;
+            height: 350px; /* Taller chart */
+        }
+
+        .no-chart-data {
+            text-align: center;
+            color: #888888;
+            padding: 40px;
+            font-size: 17px;
+        }
+
+        /* Backup Buttons */
+        .backup-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px; /* Space above backup buttons */
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .backup-buttons .button {
+            padding: 12px 25px;
+            font-size: 15px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+        }
+        .backup-buttons .button.export-backup {
+            background-color: #b0d8f0; /* Soft blue */
+            color: #3a5a70;
+        }
+        .backup-buttons .button.export-backup:hover {
+            background-color: #90c0e0;
+        }
+        .backup-buttons .button.import-backup {
+            background-color: #b0f0d0; /* Soft green */
+            color: #3a705a;
+        }
+        .backup-buttons .button.import-backup:hover {
+            background-color: #90e0b0;
+        }
+
+
+        /* Responsive Grid for Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px; /* More space */
+        }
+
+        @media (min-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .form-grid .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        /* --- 新增的表格統計樣式 --- */
+        .statistics-table-container {
+            background-color: #ffffff;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+            border: 1px solid #e8e8e8;
+            position: relative; /* For positioning the export button */
+        }
+
+        .statistics-table-container h3 {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .statistics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .statistics-table th, .statistics-table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .statistics-table th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+            color: #555555;
+        }
+
+        .statistics-table tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+
+        .statistics-table tr:hover {
+            background-color: #f0f8ff; /* Light blue hover */
+        }
+
+        .statistics-table-export-btn-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* 隱藏的日期文字，用於圖片匯出 */
+        .hidden-date {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            font-size: 14px;
+            color: #888;
+            opacity: 0.8;
+        }
+
+        /* 當轉換為圖片時，用來覆蓋背景和調整寬度 */
+        .capture-ready {
+            background-color: #ffffff !important;
+            padding: 20px !important;
+            border-radius: 16px !important;
+            box-shadow: none !important; /* remove shadow for cleaner image */
+            margin: 0 auto !important; /* center */
+            width: 550px !important; /* fixed width for consistent image */
+            box-sizing: border-box !important;
+        }
+        .capture-ready .statistics-table {
+            width: auto !important; /* adjust table width for capture-ready */
+            margin: 0 auto !important;
+        }
+        /* 確保在 capture-ready 狀態下，所有文字顏色為深色，不受其他樣式影響 */
+        .capture-ready .statistics-table th,
+        .capture-ready .statistics-table td,
+        .capture-ready h3 {
+            color: #333333 !important;
+        }
+
+        /* Filter and Sort styles */
+        .filter-sort-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .filter-sort-container .form-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-sort-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .filter-sort-actions .button {
+            padding: 10px 20px;
+            font-size: 15px;
+        }
+        .filter-sort-actions .button.apply-filters {
+            background-color: #b0d8f0;
+            color: #3a5a70;
+        }
+        .filter-sort-actions .button.clear-filters {
+            background-color: #e0e0e0;
+            color: #666666;
+        }
+
+        /* New styles for Loss Calculation */
+        .loss-calculation-container {
+            background-color: #ffffff;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            margin-bottom: 28px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .loss-calculation-container h3 {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .loss-calculation-controls .checkbox-group {
+            flex-direction: column; /* Stack checkboxes vertically */
+            align-items: flex-start; /* Align to the left */
+            gap: 10px; /* Closer spacing */
+            margin-bottom: 20px;
+        }
+
+        .total-loss-display {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: #10b981; /* Green for loss total */
+            border: 1px solid #e0e0e0;
+        }
+        .total-loss-display.profit {
+            color: #ef4444; /* Red for profit total (if any selected scenario results in profit) */
+        }
+
+        /* App Title and Edit Button */
+        .app-title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the title */
+            margin-bottom: 2px; /* Space below the title */
+            padding-top: 10px; /* Padding from top of container */
+        }
+
+        #appTitleDisplay {
+            font-size: 28px; /* Large font for the app title */
+            font-weight: 700;
+            color: #333333;
+            margin-right: 10px; /* Space between title and button */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        #editAppTitleBtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        #editAppTitleBtn:hover {
+            background-color: #e0e0e0;
+        }
+
+        #editAppTitleBtn svg {
+            width: 20px;
+            height: 20px;
+            color: #666666;
+        }
+
+        #appTitleInput {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333333;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            padding: 5px 10px;
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
+            width: 300px; /* Adjust width as needed */
+            text-align: center;
+        }
+
+        /* 新增的樣式：用於匯出時隱藏金額資訊 */
+        .hide-amount {
+            display: none !important;
+        }
+
+        /* Styles for annotation section */
+        .annotation-section {
+            padding-top: 5px; /* Space from previous section */
+            margin-top: 5px; /* Space from previous section */
+            border-top: 1px solid #f0f0f0; /* Divider */
+        }
+        .annotation-section .add-annotation-btn {
+            max-width: 200px; /* 保持這個寬度，或者根據需要調整 */
+            display: block;
+            margin: 0 0 15px 0;
+            padding: 8px 20px; /* 調整內邊距，讓高度變小 */
+            font-size: 16px;    /* 您可以調整字體大小來微調 */
+        }
+        .annotation-header {
+            margin-bottom: 1px; /* Space below header */
+        }
+        .annotation-header span {
+            font-size: 16px; /* Slightly smaller font for annotation header */
+        }
+        .annotation-content {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+        .annotations-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .annotation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background-color: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .annotation-item p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
+            padding-right: 10px; /* Space for button */
+        }
+        .annotation-item strong {
+            font-weight: 600;
+            color: #555;
+        }
+        .delete-annotation-btn {
+            background: none;
+            border: none;
+            color: #cc0000; /* Red color for delete */
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0; /* Prevent button from shrinking */
+        }
+        .delete-annotation-btn:hover {
+            background-color: #ffe0e0;
+        }
+        .delete-annotation-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+        .no-annotations {
+            font-style: italic;
+            color: #888;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Title and Edit Button -->
+        <div class="app-title-container">
+            <!-- 應用程式標題固定顯示「韭菜ＯＯ的錯題本」 -->
+            <span id="appTitleDisplay">韭菜OO的錯題本</span>
+            <!-- 編輯輸入框，只替換「OO」部分 -->
+            <input type="text" id="appTitleInput" style="display: none;">
+            <button id="editAppTitleBtn" title="編輯應用程式名稱">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            </button>
+        </div>
+
+        <div id="recordFormPage" class="page-section active">
+            <h2 id="formTitle">新增紀錄</h2>
+            <form id="recordForm" class="space-y-6">
+                <div class="card">
+                    <h3>基本資料</h3>
+                    <div class="form-grid">
+                        <!-- 紀錄日期將在後端自動設定，前端不再顯示 -->
+                        <input type="hidden" id="date" name="date"> 
+                        <div class="form-group">
+                            <label for="incidentMonth">案發月份</label>
+                            <input type="month" id="incidentMonth" name="incidentMonth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="stockCode">股票代碼</label>
+                            <input type="text" id="stockCode" name="stockCode" placeholder="例如: 2330" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="stockName">股票名稱</label>
+                            <input type="text" id="stockName" name="stockName" placeholder="例如: 台積電" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>操作</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="operationType" value="做多" checked> 做多
+                                </label>
+                                <label>
+                                    <input type="radio" name="operationType" value="做空"> 做空
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="errorDecisionResult">錯誤決策結果</label>
+                            <select id="errorDecisionResult" name="errorDecisionResult" required>
+                                <option value="">請選擇</option>
+                                <option value="少賺">少賺</option>
+                                <option value="遵守紀律，停損出場">遵守紀律，停損出場</option>
+                                <option value="套牢很久後，終於停損">套牢很久後，終於停損</option>
+                                <option value="套牢中等解套">套牢中等解套</option>
+                            </select>
+                        </div>
+                        <div id="outcomeDetails" class="form-grid full-width" style="display: none;">
+                            <div class="form-group">
+                                <label for="outcomeAmount">金額</label>
+                                <!-- 已移除 pattern="[0-9]*" 屬性以解決格式驗證問題 -->
+                                <input type="text" id="outcomeAmount" name="outcomeAmount" placeholder="輸入金額" inputmode="numeric">
+                            </div>
+                            <div class="form-group">
+                                <label for="returnRate">報酬率 (%)</label>
+                                <input type="number" id="returnRate" name="returnRate" placeholder="輸入報酬率" step="any">
+                            </div>
+                            <div class="form-group" id="daysTrappedGroup" style="display: none;">
+                                <label for="daysTrapped">套牢天數</label>
+                                <input type="number" id="daysTrapped" name="daysTrapped" placeholder="輸入天數">
+                            </div>
+                        </div>
+                        </div>
+                </div>
+
+                <div class="card">
+                    <h3>所犯錯誤（請勾選）</h3>
+                    <div id="failureReasonsContainer">
+                        <div class="collapsible-section">
+                            <button type="button" class="collapsible-header">
+                                <span>基本面</span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="fundamental" value="未注意公司財報不佳"> 未注意公司財報不佳</label>
+                                    <label><input type="checkbox" name="fundamental" value="未注意產業前景惡化"> 未注意產業前景惡化</label>
+                                    <label><input type="checkbox" name="fundamental" value="未注意政策法規變動"> 未注意政策法規變動</label>
+                                    <label><input type="checkbox" name="fundamental" value="未注意管理層問題"> 未注意管理層問題</label>
+                                    <label><input type="checkbox" name="fundamental" value="未注意大股東或董監持股變化"> 未注意大股東或董監持股變化</label>
+                                    <label><input type="checkbox" name="fundamental" value="基本面惡化卻未調整投資假設或進行停利停損"> 基本面惡化卻未調整投資假設或進行停利停損</label>
+                                </div><br>
+                                <div class="form-group mt-2">
+                                    <label for="fundamentalOther" class="specific-label">其他 (基本面)</label>
+                                    <input type="text" id="fundamentalOther" name="fundamentalOther" placeholder="手動輸入其他基本面原因">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collapsible-section">
+                            <button type="button" class="collapsible-header">
+                                <span>籌碼面</span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="capitalFlow" value="把主力出貨當成甩轎"> 把主力出貨當成甩轎</label>
+                                    <label><input type="checkbox" name="capitalFlow" value="忽略外資持續賣超"> 忽略外資持續賣超</label>
+                                    <label><input type="checkbox" name="capitalFlow" value="只看外資連續買超就進場"> 只看外資連續買超就進場</label> <!-- 新增選項 -->
+                                    <label><input type="checkbox" name="capitalFlow" value="忽略融資增加"> 忽略融資增加</label>
+                                    <label><input type="checkbox" name="capitalFlow" value="散戶過度追高後，還心存僥倖"> 散戶過度追高後，還心存僥倖</label>
+                                    <label><input type="checkbox" name="capitalFlow" value="忽略大戶持股減少"> 忽略大戶持股減少</label>
+                                </div><br>
+                                <div class="form-group mt-2">
+                                    <label for="capitalFlowOther">其他 (籌碼面)</label>
+                                    <input type="text" id="capitalFlowOther" name="capitalFlowOther" placeholder="手動輸入其他籌碼面原因">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collapsible-section">
+                            <button type="button" class="collapsible-header">
+                                <span>技術面</span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="collapsible-section">
+                                    <button type="button" class="collapsible-header">
+                                        <span>進場時機錯誤</span>
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </button>
+                                    <div class="collapsible-content">
+                                        <div class="checkbox-group">
+                                            <label><input type="checkbox" name="technical_ma" value="趨勢未明朗就進場"> 趨勢未明朗就進場</label>
+                                            <label><input type="checkbox" name="technical_ma" value="未突破壓力區就進場"> 未突破壓力區就進場</label>
+                                            <label><input type="checkbox" name="technical_ma" value="連漲三天，追高進場"> 連漲三天，追高進場</label>
+                                            <label><input type="checkbox" name="technical_ma" value="月線之下卻做多進場"> 月線之下卻做多進場</label>
+                                            <label><input type="checkbox" name="technical_ma" value="因股價便宜就進場">因股價便宜就進場</label>
+                                            <label><input type="checkbox" name="technical_ma" value="未有止跌回升訊號就進場">未有止跌回升訊號就進場</label>
+                                        </div><br>
+                                        <div class="form-group mt-2">
+                                            <label for="technical_maOther" class="specific-label">其他 (進場時機錯誤)</label>
+                                            <input type="text" id="technical_maOther" name="technical_maOther" placeholder="手動輸入其他相關原因">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="collapsible-section">
+                                    <button type="button" class="collapsible-header">
+                                        <span>忽視危險訊號</span>
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </button>
+                                    <div class="collapsible-content">
+                                        <div class="checkbox-group">
+                                            <label><input type="checkbox" name="technical_sr" value="高檔爆量長黑未出場"> 高檔爆量長黑未出場</label>
+                                            <label><input type="checkbox" name="technical_sr" value="跌破關鍵支撐未出場"> 跌破關鍵支撐未出場</label>
+                                            <label><input type="checkbox" name="technical_sr" value="高檔長黑吞噬未出場"> 高檔長黑吞噬未出場</label>
+                                            <label><input type="checkbox" name="technical_sr" value="忽視高檔KD死亡交叉"> 忽視高檔KD死亡交叉</label>
+                                            <label><input type="checkbox" name="technical_sr" value="忽視高檔價量背離"> 忽視高檔價量背離</label>
+                                            <label><input type="checkbox" name="technical_sr" value="忽視高檔長上影線"> 忽視高檔長上影線</label>
+                                            <label><input type="checkbox" name="technical_sr" value="忽視大盤趨勢"> 忽視大盤趨勢</label>
+                                        </div><br>
+                                        <div class="form-group mt-2">
+                                            <label for="technical_srOther" class="specific-label">其他 (忽視什麼訊號)</label>
+                                            <input type="text" id="technical_srOther" name="technical_srOther" placeholder="手動輸入其他原因">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="collapsible-section">
+                                    <button type="button" class="collapsible-header">
+                                        <span>其他</span>
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </button>
+                                    <div class="collapsible-content">
+                                        <div class="checkbox-group">
+                                            <label><input type="checkbox" name="technical_ip" value="盲目套用黃金交叉、死亡交叉"> 盲目套用黃金交叉、死亡交叉</label>
+                                            <label><input type="checkbox" name="technical_ip" value="購買弱勢股"> 購買弱勢股</label>
+                                            <label><input type="checkbox" name="technical_ip" value="逆勢操作"> 逆勢操作</label>
+                                            <label><input type="checkbox" name="technical_ip" value="K棒型態錯誤判斷"> K棒型態錯誤判態</label>
+                                        </div><br>
+                                        <div class="form-group mt-2">
+                                            <label for="technical_ipOther" class="specific-label">其他（技術面） </label>
+                                            <input type="text" id="technical_ipOther" name="technical_ipOther" placeholder="手動輸入其他原因">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+
+                        <div class="collapsible-section">
+                            <button type="button" class="collapsible-header">
+                                <span>心理面</span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" name="psychological" value="追高殺低"> 追高殺低</label>
+                                    <label><input type="checkbox" name="psychological" value="過度自信"> 過度自信</label>
+                                    <label><input type="checkbox" name="psychological" value="恐慌性賣出"> 恐慌性賣出</label>
+                                    <label><input type="checkbox" name="psychological" value="不設停損"> 未設停損</label>
+                                    <label><input type="checkbox" name="psychological" value="停損點到了，不願停損"> 停損點到了，不願停損</label>
+                                    <label><input type="checkbox" name="psychological" value="聽信消息面操作"> 聽信消息面操作</label>
+                                    <label><input type="checkbox" name="psychological" value="套太久，停利太快"> 套太久，停利太快</label> <!-- 新增選項 -->
+                                    <label><input type="checkbox" name="psychological" value="害怕錯過"> 害怕錯過</label> <!-- 新增選項 -->
+                                </div><br>
+                                <div class="form-group mt-2">
+                                    <label for="psychologicalOther">其他 (心理面)</label>
+                                    <input type="text" id="psychologicalOther" name="psychologicalOther" placeholder="手動輸入其他心理面原因">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>分析提醒</h3>
+                    <div id="analysisReminder" class="static-text-box"></div>
+                </div>
+
+                <div class="card">
+                    <h3>操作補充＆心得總結</h3>
+                    <div class="form-group full-width">
+                        <textarea id="summary" name="summary" rows="8" placeholder="請手動輸入您的心得總結"></textarea>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" id="cancelFormBtn" class="button secondary">取消</button>
+                    <button type="submit" class="button success">儲存紀錄</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="recordListPage" class="page-section">
+            <!-- 頁面標題動態更新為「ＯＯ的血淚史」 -->
+            <h2 id="recordListTitle">ＯＯ的血淚史</h2>
+
+            <div class="filter-sort-container">
+                <h3>篩選與排序</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="filterIncidentMonthStart">案發月份 (開始)</label>
+                        <input type="month" id="filterIncidentMonthStart" name="filterIncidentMonthStart">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterIncidentMonthEnd">案發月份 (結束)</label>
+                        <input type="month" id="filterIncidentMonthEnd" name="filterIncidentMonthEnd">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="filterStockName">股票名稱/代碼</label>
+                        <input type="text" id="filterStockName" name="filterStockName" placeholder="輸入股票名稱或代碼">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterErrorDecisionType">錯誤決策類型</label>
+                        <select id="filterErrorDecisionType" name="filterErrorDecisionType">
+                            <option value="">所有類型</option>
+                            <option value="少賺">少賺</option>
+                            <option value="遵守紀律，停損出場">遵守紀律，停損出場</option>
+                            <option value="套牢很久後，終於停損">套牢很久後，終於停損</option>
+                            <option value="套牢中等解套">套牢中等解套</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterOperationType">操作類型</label>
+                        <select id="filterOperationType" name="filterOperationType">
+                            <option value="">所有類型</option>
+                            <option value="做多">做多</option>
+                            <option value="做空">做空</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="sortOrder">排序方式</label>
+                        <select id="sortOrder" name="sortOrder">
+                            <option value="incidentMonthDesc">案發月份 (新到舊)</option>
+                            <option value="incidentMonthAsc">案發月份 (舊到新)</option>
+                            <option value="recordDateDesc">紀錄日期 (新到舊)</option>
+                            <option value="recordDateAsc">紀錄日期 (舊到新)</option>
+                            <option value="outcomeAmountDesc">金額 (高到低)</option>
+                            <option value="outcomeAmountAsc">金額 (低到高)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-sort-actions">
+                    <button type="button" id="clearFiltersBtn" class="button secondary clear-filters">清除篩選</button>
+                    <button type="button" id="applyFiltersBtn" class="button primary apply-filters">套用篩選</button>
+                </div>
+            </div>
+
+            <div id="recordList" class="record-list">
+                </div>
+            <div class="backup-buttons">
+                <button id="exportBackupBtn" class="button export-backup">匯出備份</button>
+                <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                <button id="importBackupBtn" class="button import-import">匯入備份</button>
+            </div>
+        </div>
+
+        <div id="analysisPage" class="page-section">
+            <!-- 頁面標題動態更新為「ＯＯ的分析報告」 -->
+            <h2 id="analysisPageTitle">ＯＯ的分析報告</h2>
+            <div class="chart-container">
+                <h3>常見失敗原因分佈 (圖表)</h3>
+                <div class="chart-wrapper">
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="barChartCanvas"></canvas>
+                    </div>
+                    <div class="chart-canvas-wrapper">
+                        <canvas id="pieChartCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="statisticsTableContainer" class="statistics-table-container">
+                <h3 id="statisticsTableTitle">ＯＯ失敗原因一覽</h3>
+                <div id="reasonStatisticsTable">
+                    </div>
+                <div class="statistics-table-export-btn-group">
+                    <button id="exportTableImageBtn" class="button primary">匯出表格為圖片</button>
+                </div>
+                <p id="noTableDataMessage" class="no-chart-data" style="display: none;">沒有足夠的數據來生成統計表格。請新增更多紀錄。</p>
+            </div>
+
+            <!-- 新增的總計虧損金額區塊 -->
+            <div id="totalLossContainer" class="loss-calculation-container">
+                <h3>目前已繳學費</h3>
+                <p style="font-size: 16px; color: #666; text-align: center; margin-bottom: 15px;">請選擇您想加總的情境：</p>
+                <div id="lossCalculationCheckboxes" class="loss-calculation-controls">
+                    <!-- Checkboxes will be dynamically generated here -->
+                </div>
+                <div id="totalLossDisplay" class="total-loss-display">
+                    總計金額： NT$ 0
+                </div>
+            </div>
+            
+            <p id="noOverallAnalysisDataMessage" class="no-chart-data" style="display: none;">沒有足夠的數據來生成圖表與統計表格。請新增更多紀錄。</p>
+
+        </div>
+        <!-- Navigation moved to the bottom -->
+        <nav>
+            <button id="showFormBtn" class="">新增紀錄</button>
+            <button id="showListBtn" class="">血淚史</button>
+            <button id="showAnalysisBtn" class="">圖表分析</button>
+        </nav>
+    </div>
+
+    <!-- 應用程式通用 Modal -->
+    <div id="appModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <div class="modal-actions">
+                <button id="modalCancelBtn" class="button secondary" style="display: none;">取消</button>
+                <button id="modalConfirmBtn" class="button primary">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增的匯出選項 Modal -->
+    <div id="exportOptionsModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3>匯出選項</h3>
+            <p>請選擇匯出時是否隱藏金額資訊：</p>
+            <div class="checkbox-group" style="justify-content: center; margin-bottom: 20px;">
+                <label>
+                    <input type="checkbox" id="hideAmountCheckbox"> 隱藏金額資訊
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button id="cancelExportOptionsBtn" class="button secondary">取消</button>
+                <button id="confirmExportOptionsBtn" class="button primary">確認匯出</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" nonce="MzgwNDk0ODE1MiwyOTUxNjg1NDY0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" nonce="MzgwNDk0ODE1MiwyOTUxNjg1NDY0"></script>
+    <script nonce="MzgwNDk0ODE1MiwyOTUxNjg1NDY0">
+        // DOM Elements
+        const showListBtn = document.getElementById('showListBtn');
+        const showFormBtn = document.getElementById('showFormBtn');
+        const showAnalysisBtn = document.getElementById('showAnalysisBtn');
+
+        const recordListPage = document.getElementById('recordListPage');
+        const recordFormPage = document.getElementById('recordFormPage');
+        const analysisPage = document.getElementById('analysisPage');
+
+        const recordForm = document.getElementById('recordForm');
+        const formTitle = document.getElementById('formTitle');
+        const cancelFormBtn = document.getElementById('cancelFormBtn');
+        const recordListContainer = document.getElementById('recordList');
+        const analysisReminderDiv = document.getElementById('analysisReminder');
+        
+        // 新增的 DOM 元素
+        const statisticsTableContainer = document.getElementById('statisticsTableContainer');
+        const reasonStatisticsTableDiv = document.getElementById('reasonStatisticsTable');
+        const exportTableImageBtn = document.getElementById('exportTableImageBtn');
+        const noOverallAnalysisDataMessage = document.getElementById('noOverallAnalysisDataMessage');
+
+        // New DOM Elements for error decision result
+        const errorDecisionResultSelect = document.getElementById('errorDecisionResult');
+        const outcomeDetailsDiv = document.getElementById('outcomeDetails');
+        const outcomeAmountInput = document.getElementById('outcomeAmount');
+        const returnRateInput = document.getElementById('returnRate');
+        const daysTrappedGroup = document.getElementById('daysTrappedGroup');
+        const daysTrappedInput = document.getElementById('daysTrapped');
+
+        // New DOM Elements for incident month
+        const incidentMonthInput = document.getElementById('incidentMonth');
+
+
+        // Modal Elements
+        const appModal = document.getElementById('appModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+
+        // Backup Buttons
+        const exportBackupBtn = document.getElementById('exportBackupBtn');
+        const importBackupBtn = document.getElementById('importBackupBtn');
+        const importFileInput = document.getElementById('importFileInput');
+
+        // Filter & Sort Elements
+        const filterIncidentMonthStartInput = document.getElementById('filterIncidentMonthStart');
+        const filterIncidentMonthEndInput = document.getElementById('filterIncidentMonthEnd');
+        const filterStockNameInput = document.getElementById('filterStockName');
+        const filterErrorDecisionTypeSelect = document.getElementById('filterErrorDecisionType');
+        const filterOperationTypeSelect = document.getElementById('filterOperationType');
+        const sortOrderSelect = document.getElementById('sortOrder');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+
+        // New DOM elements for Total Loss Calculation
+        const totalLossContainer = document.getElementById('totalLossContainer');
+        const lossCalculationCheckboxesDiv = document.getElementById('lossCalculationCheckboxes');
+        const totalLossDisplayDiv = document.getElementById('totalLossDisplay');
+
+        // App Title Elements
+        const appTitleDisplay = document.getElementById('appTitleDisplay');
+        const appTitleInput = document.getElementById('appTitleInput');
+        const editAppTitleBtn = document.getElementById('editAppTitleBtn');
+        const recordListTitle = document.getElementById('recordListTitle'); // 列表頁面標題
+        const analysisPageTitle = document.getElementById('analysisPageTitle'); // 分析頁面標題
+        const statisticsTableTitle = document.getElementById('statisticsTableTitle'); // 統計表格標題
+
+        // 新增的匯出選項 Modal 元素
+        const exportOptionsModal = document.getElementById('exportOptionsModal');
+        const hideAmountCheckbox = document.getElementById('hideAmountCheckbox');
+        const confirmExportOptionsBtn = document.getElementById('confirmExportOptionsBtn');
+        const cancelExportOptionsBtn = document.getElementById('cancelExportOptionsBtn');
+
+        let currentEditingRecordId = null;
+        let barChart = null; // To hold the Chart.js bar chart instance
+        let pieChart = null; // To hold the Chart.js pie chart instance
+        let currentRecordItemToExport = null; // 用於儲存要匯出的 record-item 元素
+
+        // Mapping for display names of categories/subcategories (for record display and chart labels)
+        const displayCategoryNames = {
+            fundamental: '基本面',
+            fundamentalOther: '其他 (基本面)',
+            capitalFlow: '籌碼面',
+            capitalFlowOther: '其他 (籌碼面)',
+            technical: '技術面',
+            technicalOther: '其他 (技術面)', // This might not be strictly needed if technical_ipOther covers it.
+            technical_ma: '進場時機錯誤',
+            technical_maOther: '其他 (進場時機錯誤)',
+            technical_sr: '忽視危險訊號',
+            technical_srOther: '其他 (忽視危險訊號)',
+            technical_ip: '其他技術面', // Changed from '指標與型態' for '其他' general technical
+            technical_ipOther: '其他技術面', // Explicitly for '其他' input in the general '其他技術面' section
+            psychological: '心理面',
+            psychologicalOther: '其他 (心理面)',
+            // Add other technical reasons directly if they are not in sub-sections
+            '趨勢未明朗就進場': '趨勢未明朗就進場',
+            '未突破壓力區就進場': '未突破壓力區就進場',
+            '連漲三天，追高進場': '連漲三天，追高進場',
+            '月線之下卻做多進場': '月線之下卻做多進場',
+            '因股價便宜就進場': '因股價便宜就進場',
+            '未有止跌回升訊號就進場': '未有止跌回升訊號就進場',
+            '高檔爆量長黑未出場': '高檔爆量長黑未出場',
+            '跌破關鍵支撐未出場': '跌破關鍵支撐未出場',
+            '高檔長黑吞噬未出場': '高檔長黑吞噬未出場',
+            '忽視高檔KD死亡交叉': '忽視高檔KD死亡交叉',
+            '忽視高檔價量背離': '忽視高檔價量背離',
+            '忽視高檔長上影線': '忽視高檔長上影線',
+            '忽視大盤趨勢': '忽視大盤趨勢',
+            '盲目套用黃金交叉、死亡交叉': '盲目套用黃金交叉、死亡交叉',
+            '購買弱勢股': '購買弱勢股',
+            '逆勢操作': '逆勢操作',
+            'K棒型態錯誤判斷': 'K棒型態錯誤判斷',
+            '追高殺低': '追高殺低',
+            '過度自信': '過度自信',
+            '恐慌性賣出': '恐慌性賣出',
+            '不設停損': '未設停損', // Updated display name for consistency
+            '停損點到了，不願停損': '停損點到了，不願停損',
+            '聽信消息面操作': '聽信消息面操作',
+            // 新增或修改的選項名稱
+            '只看外資連續買超就進場': '只看外資連續買超就進場', // 新增
+            '套太久，停利太快': '套太久，停利太快', // 新增
+            '害怕錯過': '害怕錯過', // 新增
+            '少賺': '少賺',
+            '遵守紀律，停損出場': '遵守紀律，停損出場',
+            '套牢很久後，終於停損': '套牢很久後，終於停損',
+            '套牢中等解套': '套牢中等解套'
+        };
+
+        // All possible error decision results for the checkboxes
+        const errorDecisionResultOptions = [
+            '少賺',
+            '遵守紀律，停損出場',
+            '套牢很久後，終於停損',
+            '套牢中等解套'
+        ];
+
+
+        // --- Utility Functions ---
+
+        // Show custom modal
+        function showModal(title, message, options = {}) {
+            // options can include:
+            // type: 'alert', 'confirm', 'input' (default 'alert')
+            // onConfirmCallback: function (inputValue)
+            // onCancelCallback: function
+            // inputConfig: { type: 'text' | 'textarea', placeholder: '...', initialValue: '...' }
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            appModal.style.display = 'flex';
+
+            // Clear previous input if any
+            const existingInput = document.querySelector('.modal-content .modal-input-element');
+            if (existingInput) {
+                existingInput.remove();
+            }
+
+            let inputElement = null;
+            if (options.type === 'input' && options.inputConfig) {
+                if (options.inputConfig.type === 'textarea') {
+                    inputElement = document.createElement('textarea');
+                    inputElement.rows = 5;
+                } else {
+                    inputElement = document.createElement('input');
+                    inputElement.type = options.inputConfig.type || 'text';
+                }
+                inputElement.classList.add('form-group'); // Reuse form-group styling
+                inputElement.classList.add('modal-input-element'); // Add a class to easily find and remove
+                inputElement.style.width = '100%';
+                inputElement.style.marginBottom = '20px';
+                inputElement.placeholder = options.inputConfig.placeholder || '';
+                inputElement.value = options.inputConfig.initialValue || '';
+                // Insert before modal-actions div
+                modalMessage.parentNode.insertBefore(inputElement, document.querySelector('.modal-content .modal-actions'));
+            }
+
+            modalConfirmBtn.onclick = () => {
+                appModal.style.display = 'none';
+                if (options.onConfirmCallback) {
+                    const inputValue = inputElement ? inputElement.value : null;
+                    options.onConfirmCallback(inputValue);
+                }
+            };
+
+            if (options.type === 'confirm' || options.type === 'input') {
+                modalCancelBtn.style.display = 'inline-block';
+                modalCancelBtn.onclick = () => {
+                    appModal.style.display = 'none';
+                    if (options.onCancelCallback) options.onCancelCallback();
+                };
+            } else {
+                modalCancelBtn.style.display = 'none';
+            }
+        }
+
+        // Format number with commas
+        function formatNumberWithCommas(number) {
+            if (number === null || number === undefined || isNaN(number)) {
+                return 'N/A';
+            }
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // Parse number from string with commas
+        function parseNumberFromCommas(str) {
+            if (typeof str !== 'string' || str.trim() === '') {
+                return null;
+            }
+            // Remove all commas before parsing
+            return parseFloat(str.replace(/,/g, ''));
+        }
+
+        // Generate a simple unique ID for localStorage items
+        function generateUniqueId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2);
+        }
+
+        // Save records to localStorage
+        function saveRecords(records) {
+            localStorage.setItem('leekLessonsRecords', JSON.stringify(records));
+        }
+
+        // Load records from localStorage
+        function loadRecords() {
+            const records = JSON.parse(localStorage.getItem('leekLessonsRecords') || '[]');
+            // Ensure timestamp is a Date object for sorting if it's a string from localStorage
+            return records.map(record => ({
+                ...record,
+                timestamp: record.timestamp ? new Date(record.timestamp) : new Date(record.date), // Fallback to date if timestamp missing
+                annotations: record.annotations || [] // Ensure annotations array exists
+            }));
+        }
+
+        // --- Page Navigation ---
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (pageId === 'recordFormPage') {
+                showFormBtn.classList.add('active');
+            } else if (pageId === 'recordListPage') {
+                showListBtn.classList.add('active');
+                displayRecords(); // Now calls displayRecords which handles filtering and sorting
+            } else if (pageId === 'analysisPage') {
+                showAnalysisBtn.classList.add('active');
+                renderAnalysisChart();
+                renderReasonStatisticsTable(); // 新增：渲染表格統計
+                setupLossCalculation(); // Call the new function to set up loss calculation
+            }
+        }
+
+        // Helper function to reset all collapsible sections to closed state
+        function resetCollapsibles() {
+            document.querySelectorAll('.collapsible-header').forEach(header => {
+                header.classList.remove('open');
+            });
+            document.querySelectorAll('.collapsible-content').forEach(content => {
+                content.classList.remove('open');
+            });
+        }
+
+        // --- Record Form Logic ---
+        function resetForm() {
+            resetCollapsibles(); // Ensure all are closed first
+            recordForm.reset();
+            currentEditingRecordId = null; // Reset editing ID
+            formTitle.textContent = '新增紀錄';
+            // document.getElementById('date').value = new Date().toISOString().split('T')[0]; // Set default date
+            analysisReminderDiv.innerHTML = ''; // Clear analysis reminder using innerHTML
+            // Uncheck all checkboxes and clear other reason inputs
+            document.querySelectorAll('#recordForm input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelectorAll('#recordForm input[type="text"][id$="Other"]').forEach(input => {
+                input.value = '';
+            });
+            // Reset radio buttons to default
+            document.querySelector('input[name="operationType"][value="做多"]').checked = true;
+            
+            // Reset new fields for error decision result
+            errorDecisionResultSelect.value = ''; 
+            outcomeAmountInput.value = '';
+            returnRateInput.value = '';
+            daysTrappedInput.value = '';
+            toggleOutcomeDetails(); // Hide the sections and remove required attributes
+
+            // Reset incident month
+            const today = new Date();
+            const currentMonth = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}`;
+            incidentMonthInput.value = currentMonth; // Set default incident month
+        }
+
+        function populateFormForEdit(record) {
+            resetCollapsibles(); // Ensure all are closed before populating
+            currentEditingRecordId = record.id;
+            formTitle.textContent = '編輯紀錄';
+
+            // document.getElementById('date').value = record.date; // Record date is now hidden
+            incidentMonthInput.value = record.incidentMonth || ''; // Populate incident month
+            document.getElementById('stockCode').value = record.stockCode;
+            document.getElementById('stockName').value = record.stockName;
+            document.querySelector(`input[name="operationType"][value="${record.operationType}"]`).checked = true;
+            
+            // Populate new fields
+            errorDecisionResultSelect.value = record.errorDecisionResult || '';
+            // Format amount with commas when populating for edit
+            outcomeAmountInput.value = record.outcomeAmount !== null ? formatNumberWithCommas(record.outcomeAmount) : '';
+            returnRateInput.value = record.returnRate || '';
+            daysTrappedInput.value = record.daysTrapped || '';
+            // Call toggleOutcomeDetails AFTER populating the values, it will now correctly hide/show without resetting
+            toggleOutcomeDetails(); 
+
+            // Reset all checkboxes and other inputs first
+            document.querySelectorAll('#recordForm input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelectorAll('#recordForm input[type="text"][id$="Other"]').forEach(input => {
+                input.value = '';
+            });
+
+            // Set failure reasons by iterating through saved record.failureReasons
+            for (const key in record.failureReasons) {
+                if (record.failureReasons.hasOwnProperty(key)) {
+                    const value = record.failureReasons[key];
+                    if (key.endsWith('Other')) {
+                        const inputElement = document.getElementById(key);
+                        if (inputElement) {
+                            inputElement.value = value || '';
+                        }
+                    } else if (Array.isArray(value)) {
+                        (value || []).forEach(reason => {
+                            const checkbox = document.querySelector(`input[name="${key}"][value="${reason}"]`);
+                            if (checkbox) {
+                                checkbox.checked = true;
+                            }
+                        });
+                    }
+                }
+            }
+            
+            // When populating for edit, set the plain text content, then update reminder will format it
+            analysisReminderDiv.textContent = record.analysisReminder || ''; 
+            document.getElementById('summary').value = record.summary || '';
+
+            // Open relevant collapsible sections if they contain selected reasons or other text
+            // This part is crucial for nested collapsibles.
+            document.querySelectorAll('.collapsible-section').forEach(section => {
+                const header = section.querySelector('.collapsible-header');
+                const content = section.querySelector('.collapsible-content');
+                let shouldOpen = false;
+
+                // Check for checked checkboxes within this section's content
+                content.querySelectorAll('input[type="checkbox"]:checked').forEach(() => {
+                    shouldOpen = true;
+                });
+
+                // Check for filled 'other' text inputs within this section's content
+                // For 'Other' inputs, check if they have a value to determine if the section should be open
+                content.querySelectorAll('input[type="text"][id$="Other"]').forEach(input => {
+                    if (input.value.trim() !== '') {
+                        shouldOpen = true;
+                    }
+                });
+
+                if (shouldOpen) {
+                    header.classList.add('open');
+                    content.classList.add('open');
+                    // This is crucial: also open parent collapsibles if this one is open
+                    let parentCollapsibleContent = header.closest('.collapsible-content');
+                    while (parentCollapsibleContent) {
+                        const parentHeader = parentCollapsibleContent.previousElementSibling; // Assuming header is always before content
+                        if (parentHeader && parentHeader.classList.contains('collapsible-header')) {
+                            parentHeader.classList.add('open');
+                            parentCollapsibleContent.classList.add('open');
+                        }
+                        parentCollapsibleContent = parentHeader ? parentHeader.closest('.collapsible-content') : null;
+                    }
+                }
+            });
+            updateAnalysisReminder(); // Ensure reminder is updated after populating form
+        }
+
+        recordForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const newRecord = {
+                date: new Date().toISOString().split('T')[0], // Automatically set current date
+                incidentMonth: incidentMonthInput.value, // Get incident month
+                stockCode: document.getElementById('stockCode').value,
+                stockName: document.getElementById('stockName').value,
+                operationType: document.querySelector('input[name="operationType"]:checked').value,
+                // New fields for error decision result
+                errorDecisionResult: errorDecisionResultSelect.value,
+                // Parse amount from string with commas
+                outcomeAmount: parseNumberFromCommas(outcomeAmountInput.value),
+                returnRate: returnRateInput.value ? parseFloat(returnRateInput.value) : null,
+                daysTrapped: daysTrappedInput.value ? parseInt(daysTrappedInput.value, 10) : null,
+                
+                failureReasons: {}, // Initialize as empty object
+                summary: document.getElementById('summary').value,
+                timestamp: new Date().toISOString(), // Store timestamp for sorting
+                annotations: [] // Initialize annotations as empty array for new records
+            };
+
+            // Collect all checkbox values
+            document.querySelectorAll('#failureReasonsContainer input[type="checkbox"]').forEach(checkbox => {
+                if (checkbox.checked) {
+                    const name = checkbox.name;
+                    if (!newRecord.failureReasons[name]) {
+                        newRecord.failureReasons[name] = [];
+                    }
+                    newRecord.failureReasons[name].push(checkbox.value);
+                }
+            });
+
+            // Collect all 'other' text input values
+            document.querySelectorAll('#failureReasonsContainer input[type="text"][id$="Other"]').forEach(input => {
+                if (input.value.trim() !== '') {
+                    newRecord.failureReasons[input.id] = input.value.trim();
+                }
+            });
+
+            // Reconstruct analysisReminder if it was present
+            if (analysisReminderDiv.textContent.trim() !== '') {
+                newRecord.analysisReminder = analysisReminderDiv.textContent.trim();
+            } else {
+                newRecord.analysisReminder = '';
+            }
+
+
+            let records = loadRecords();
+
+            if (currentEditingRecordId) {
+                // Update existing record
+                const index = records.findIndex(r => r.id === currentEditingRecordId);
+                if (index !== -1) {
+                    // Preserve existing annotations when updating
+                    newRecord.annotations = records[index].annotations || []; 
+                    records[index] = { ...newRecord, id: currentEditingRecordId };
+                    showModal('成功', '紀錄已成功更新！', {type: 'alert', onConfirmCallback: () => {
+                        saveRecords(records);
+                        resetForm();
+                        showPage('recordListPage');
+                    }});
+                }
+            } else {
+                // Add new record
+                newRecord.id = generateUniqueId();
+                records.push(newRecord);
+                showModal('成功', '紀錄已成功新增！', {type: 'alert', onConfirmCallback: () => {
+                    saveRecords(records);
+                    resetForm();
+                    showPage('recordListPage');
+                }});
+            }
+        });
+
+        cancelFormBtn.addEventListener('click', () => {
+            resetForm();
+            showPage('recordListPage');
+        });
+
+        // Event listener for failure reason checkboxes and other inputs to update analysis reminder
+        document.querySelectorAll('#failureReasonsContainer input[type="checkbox"], #failureReasonsContainer input[type="text"]').forEach(input => {
+            input.addEventListener('change', updateAnalysisReminder);
+            input.addEventListener('keyup', updateAnalysisReminder); // For text inputs
+        });
+
+        function updateAnalysisReminder() {
+            const selectedReasons = [];
+            // Iterate through all checkboxes and text inputs to collect selected reasons
+            document.querySelectorAll('#failureReasonsContainer input[type="checkbox"]').forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedReasons.push(checkbox.value);
+                }
+            });
+            document.querySelectorAll('#failureReasonsContainer input[type="text"][id$="Other"]').forEach(input => {
+                if (input.value.trim() !== '') {
+                    // Use the label text if available, otherwise use the input value itself for display
+                    const labelElement = input.previousElementSibling;
+                    if (labelElement && labelElement.tagName === 'LABEL' && labelElement.classList.contains('specific-label')) {
+                        // For other reasons, extract the meaningful part of the label
+                        let labelText = labelElement.textContent.replace('其他 (', '').replace(')', '').trim();
+                        // If it ends with ' ', remove it
+                        if (labelText.endsWith(' ')) labelText = labelText.slice(0, -1);
+
+                        // If the input's ID is exactly "fundamentalOther", "capitalFlowOther", etc., use base category.
+                        // Otherwise, use the label.
+                        if (['fundamentalOther', 'capitalFlowOther', 'technical_maOther', 'technical_srOther', 'technical_ipOther', 'psychologicalOther'].includes(input.id)) {
+                             // Map the input.id to its parent category name.
+                            const categoryMap = {
+                                'fundamentalOther': displayCategoryNames['fundamental'],
+                                'capitalFlowOther': displayCategoryNames['capitalFlow'],
+                                'technical_maOther': displayCategoryNames['technical_ma'],
+                                'technical_srOther': displayCategoryNames['technical_sr'],
+                                'technical_ipOther': displayCategoryNames['technical_ip'], // technical_ip is for '其他' in technical section
+                                'psychologicalOther': displayCategoryNames['psychological']
+                            };
+                            selectedReasons.push(`${categoryMap[input.id] || labelText}: ${input.value.trim()}`);
+                        } else {
+                            selectedReasons.push(`${labelText}: ${input.value.trim()}`);
+                        }
+                    } else {
+                        selectedReasons.push(input.value.trim());
+                    }
+                }
+            });
+
+            if (selectedReasons.length > 0) {
+                analysisReminderDiv.innerHTML = `
+                    <span class="black-text">${selectedReasons.join('；')}</span><br>
+                    <span class="blue-text">以上是您淪為韭菜的原因</span><br>
+                    <span class="red-text">請記住這些失敗原因，以後閃過這些雷，就又朝股神邁進一步，到時股市就是你的提款機！</span>
+                `;
+            } else {
+                analysisReminderDiv.innerHTML = '';
+            }
+        }
+
+
+        // --- Record List Logic ---
+
+        // Function to get filtered and sorted records
+        function getFilteredAndSortedRecords() {
+            let records = loadRecords(); // Get all records
+
+            // Apply filters
+            const filterMonthStart = filterIncidentMonthStartInput.value;
+            const filterMonthEnd = filterIncidentMonthEndInput.value;
+            const filterStockName = filterStockNameInput.value.toLowerCase();
+            const filterErrorDecisionType = filterErrorDecisionTypeSelect.value;
+            const filterOperationType = filterOperationTypeSelect.value;
+
+            records = records.filter(record => {
+                let match = true;
+
+                // Filter by Incident Month Range
+                if (filterMonthStart && record.incidentMonth < filterMonthStart) {
+                    match = false;
+                }
+                if (filterMonthEnd && record.incidentMonth > filterMonthEnd) {
+                    match = false;
+                }
+
+                // Filter by Stock Name/Code
+                if (filterStockName && !(record.stockName.toLowerCase().includes(filterStockName) || record.stockCode.toLowerCase().includes(filterStockName))) {
+                    match = false;
+                }
+
+                // Filter by Error Decision Type
+                if (filterErrorDecisionType && record.errorDecisionResult !== filterErrorDecisionType) {
+                    match = false;
+                }
+
+                // Filter by Operation Type
+                if (filterOperationType && record.operationType !== filterOperationType) {
+                    match = false;
+                }
+
+                return match;
+            });
+
+            // Apply sorting
+            const sortOrder = sortOrderSelect.value;
+            records.sort((a, b) => {
+                if (sortOrder === 'incidentMonthDesc') {
+                    // Sort by incidentMonth (YYYY-MM) descending
+                    if (a.incidentMonth > b.incidentMonth) return -1;
+                    if (a.incidentMonth < b.incidentMonth) return 1;
+                    // If months are same, sort by timestamp descending
+                    return b.timestamp.getTime() - a.timestamp.getTime();
+                } else if (sortOrder === 'incidentMonthAsc') {
+                    // Sort by incidentMonth (YYYY-MM) ascending
+                    if (a.incidentMonth < b.incidentMonth) return -1;
+                    if (a.incidentMonth > b.incidentMonth) return 1;
+                    // If months are same, sort by timestamp ascending
+                    return a.timestamp.getTime() - b.timestamp.getTime();
+                } else if (sortOrder === 'recordDateDesc') {
+                    // Sort by record date (timestamp) descending
+                    return b.timestamp.getTime() - a.timestamp.getTime();
+                } else if (sortOrder === 'recordDateAsc') {
+                    // Sort by record date (timestamp) ascending
+                    return a.timestamp.getTime() - b.timestamp.getTime();
+                } else if (sortOrder === 'outcomeAmountDesc') {
+                    // Sort by outcomeAmount descending (nulls at the end)
+                    const valA = a.outcomeAmount !== null ? a.outcomeAmount : -Infinity; // Treat null as very small for descending
+                    const valB = b.outcomeAmount !== null ? b.outcomeAmount : -Infinity;
+                    return valB - valA;
+                } else if (sortOrder === 'outcomeAmountAsc') {
+                    // Sort by outcomeAmount ascending (nulls at the end)
+                    const valA = a.outcomeAmount !== null ? a.outcomeAmount : Infinity; // Treat null as very large for ascending
+                    const valB = b.outcomeAmount !== null ? b.outcomeAmount : Infinity;
+                    return valA - valB;
+                }
+                return 0; // Should not happen
+            });
+
+            return records;
+        }
+
+
+        function displayRecords() {
+            const recordsToDisplay = getFilteredAndSortedRecords();
+            recordListContainer.innerHTML = ''; // Clear previous records
+
+            if (recordsToDisplay.length === 0) {
+                recordListContainer.innerHTML = '<p class="no-records">沒有符合篩選條件的紀錄。</p>';
+                return;
+            }
+
+            recordsToDisplay.forEach(record => {
+                const recordItem = document.createElement('div');
+                recordItem.classList.add('record-item');
+                recordItem.dataset.id = record.id; // Changed to data-id for consistency
+
+                const failureReasonsHtml = [];
+                // Iterate through the stored failureReasons object
+                for (const key in record.failureReasons) {
+                    if (record.failureReasons.hasOwnProperty(key)) {
+                        const value = record.failureReasons[key];
+                        // If the key is 'technical_ipOther' and value is present, prioritize it under '其他技術面'
+                        if (key === 'technical_ipOther' && typeof value === 'string' && value.trim() !== '') {
+                            failureReasonsHtml.push(`<li><strong>${displayCategoryNames['technical_ip']}:</strong> ${value}</li>`);
+                            continue; // Skip the rest of the loop for this key
+                        }
+                        
+                        const displayKey = displayCategoryNames[key] || key; // Get display name from map
+
+                        if (Array.isArray(value) && value.length > 0) {
+                            failureReasonsHtml.push(`<li><strong>${displayKey}:</strong> ${value.map(v => displayCategoryNames[v] || v).join('、')}</li>`);
+                        } else if (typeof value === 'string' && value.trim() !== '') {
+                            // For 'other' reasons, check if the key is a specific 'Other' ID and display accordingly
+                            if (key.endsWith('Other')) {
+                                // Try to get the base category name for 'Other' inputs
+                                const baseCategory = key.replace('Other', '');
+                                // Use the displayCategoryNames for more specific mapping if available for base category
+                                const baseDisplayName = displayCategoryNames[baseCategory] || baseCategory;
+                                // If baseDisplayName is one of the specific technical sub-categories, refine the label
+                                let refinedLabel = baseDisplayName;
+                                if (baseCategory === 'technical_ma') refinedLabel = '進場時機錯誤';
+                                else if (baseCategory === 'technical_sr') refinedLabel = '忽視危險訊號';
+                                else if (baseCategory === 'technical_ip') refinedLabel = '其他技術面'; // technical_ip is for '其他' in technical section
+                                
+                                failureReasonsHtml.push(`<li><strong>${refinedLabel} (其他):</strong> ${value}</li>`);
+                            } else {
+                                failureReasonsHtml.push(`<li><strong>${displayKey}:</strong> ${value}</li>`);
+                            }
+                        }
+                    }
+                }
+
+                // Reconstruct analysis reminder with colors for display
+                let analysisReminderDisplayHtml = '';
+                if (record.analysisReminder) {
+                    // The saved analysisReminder is plain text, we need to parse it back into parts for colored display
+                    // The text is saved as:
+                    // "原因1;原因2;原因3\n以上是您淪為韭菜的原因\n請記住這些原因，以後閃過這些雷，就又朝股神邁進一步，到時股市就是你的提款機！。"
+                    // We need to split by '\n' and apply classes.
+                    const savedTextParts = record.analysisReminder.split('\n');
+                    if (savedTextParts.length >= 3) { // Expecting at least 3 parts based on current updateAnalysisReminder structure
+                        analysisReminderDisplayHtml = `
+                            <div class="record-section-divider">
+                                <p><strong>分析提醒:</strong></p>
+                                <p>
+                                    <span class="black-text">${savedTextParts[0]}</span><br>
+                                    <span class="blue-text">${savedTextParts[1]}</span><br>
+                                    <span class="red-text">${savedTextParts[2]}</span>
+                                </p>
+                            </div>
+                        `;
+                    } else {
+                        // Fallback if the format is unexpected or older version, display as plain text
+                        analysisReminderDisplayHtml = `
+                            <div class="record-section-divider">
+                                <p><strong>分析提醒:</strong></p>
+                                <p>${record.analysisReminder.replace(/\n/g, '<br>')}</p>
+                            </div>
+                        `;
+                    }
+                }
+                
+                // Logic for new error decision result display and formatting
+                let resultClass = '';
+                let outcomeDetailsBlockHtml = '';
+
+                // 根據台灣股市習慣調整顏色邏輯：賺錢相關為紅色，虧損相關為綠色
+                if (record.errorDecisionResult === '少賺' || 
+                    record.errorDecisionResult === '遵守紀律，停損出場' ||
+                    record.errorDecisionResult === '套牢很久後，終於停損') {
+                    resultClass = 'result-loss'; // 這些情境都代表虧損或少賺，顯示為綠色
+                } else if (record.errorDecisionResult === '套牢中等解套') {
+                    if (record.returnRate !== null && record.returnRate < 0) {
+                        resultClass = 'result-loss'; // 報酬率為負，仍是虧損，顯示為綠色
+                    } else if (record.returnRate !== null && record.returnRate >= 0) {
+                        resultClass = 'result-profit'; // 報酬率為正或零，代表賺錢或解套，顯示為紅色
+                    } else {
+                        resultClass = 'result-normal'; // 預設值，如果報酬率為空
+                    }
+                } else {
+                    resultClass = 'result-normal'; // 其他或未知類型
+                }
+
+                // Build the detailed outcome block
+                if (record.errorDecisionResult) {
+                    outcomeDetailsBlockHtml = `
+                        <div class="outcome-details-block">
+                            <p><strong>錯誤決策結果:</strong> <span class="${resultClass}">${displayCategoryNames[record.errorDecisionResult] || record.errorDecisionResult}</span></p>
+                            <p class="export-amount-field"><strong>金額:</strong> ${formatNumberWithCommas(record.outcomeAmount)}</p>
+                            <p><strong>報酬率:</strong> ${record.returnRate}%</p>
+                            ${(record.errorDecisionResult === '套牢中等解套' || record.errorDecisionResult === '套牢很久後，終於停損') && record.daysTrapped !== null ? `<p><strong>套牢天數:</strong> ${record.daysTrapped}天</p>` : ''}
+                        </div>
+                    `;
+                }
+
+
+                recordItem.innerHTML = `
+                    <div class="record-item-header">
+                        <h3>${record.stockName} (${record.stockCode})</h3>
+                        <div class="record-actions">
+                            <button class="edit-btn" title="編輯">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            </button>
+                            <button class="delete-btn" title="刪除">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                            <button class="export-btn" title="匯出卡片">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="record-detail">
+                        <p><strong>記錄者:</strong> 韭菜${getAppTitle()}</p> <!-- 新增的記錄者資訊 -->
+                        <p><strong>紀錄日期:</strong> ${record.date}</p>
+                        <p><strong>案發月份:</strong> ${record.incidentMonth}</p>
+                        <p><strong>操作:</strong> ${record.operationType}</p>
+                        ${outcomeDetailsBlockHtml}
+                        ${failureReasonsHtml.length > 0 ? `
+                            <div class="record-section-divider">
+                                <p><strong>所犯錯誤:</strong></p>
+                                <ul>${failureReasonsHtml.join('')}</ul>
+                            </div>
+                        ` : ''}
+                        ${analysisReminderDisplayHtml}
+                        ${record.summary ? `
+                            <div class="record-section-divider">
+                                <p><strong>操作補充＆心得總結:</strong></p>
+                                <p>${record.summary.replace(/\n/g, '<br>')}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <!-- New Annotation Section -->
+                    <div class="annotation-section">
+                        <button class="button primary add-annotation-btn" data-record-id="${record.id}">
+                            新增批註
+                        </button>
+                        <button type="button" class="collapsible-header annotation-header">
+                            <span>批註 (${record.annotations ? record.annotations.length : 0})</span>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="collapsible-content annotation-content">
+                            <div class="annotations-list">
+                                ${(record.annotations || []).length > 0 ?
+                                    (record.annotations || []).map((annotation, index) => `
+                                        <div class="annotation-item">
+                                            <p><strong>${new Date(annotation.timestamp).toLocaleDateString('zh-TW')}:</strong> ${annotation.text.replace(/\n/g, '<br>')}</p>
+                                            <button class="delete-annotation-btn" data-record-id="${record.id}" data-annotation-index="${index}" title="刪除批註">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </button>
+                                        </div>
+                                    `).join('')
+                                    : '<p class="no-annotations">目前沒有批註。</p>'
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+                recordListContainer.appendChild(recordItem);
+            });
+
+            // Add event listeners to new buttons
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const recordId = e.target.closest('.record-item').dataset.id;
+                    const recordToEdit = loadRecords().find(r => r.id === recordId);
+                    if (recordToEdit) {
+                        populateFormForEdit(recordToEdit);
+                        showPage('recordFormPage');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const recordId = e.target.closest('.record-item').dataset.id;
+                    showModal('確認刪除', '您確定要刪除這條紀錄嗎？此操作不可逆。', {type: 'confirm', onConfirmCallback: () => {
+                        deleteRecord(recordId);
+                    }});
+                });
+            });
+
+            // 修改匯出按鈕的事件監聽器，先跳出選項 modal
+            document.querySelectorAll('.export-btn').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const recordItemElement = e.target.closest('.record-item');
+                    currentRecordItemToExport = recordItemElement; // 儲存要匯出的元素
+                    exportOptionsModal.style.display = 'flex'; // 顯示匯出選項 modal
+                });
+            });
+
+            // Add event listener for "Add Annotation" button
+            // Changed selector to target the new button position
+            document.querySelectorAll('.annotation-section .add-annotation-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const recordId = e.target.closest('.annotation-section').dataset.recordId || e.target.closest('.record-item').dataset.id; // Ensure we get the record ID correctly
+                    showModal('新增批註', '請輸入您的批註：', {
+                        type: 'input',
+                        inputConfig: { type: 'textarea', placeholder: '在此輸入批註內容...' },
+                        onConfirmCallback: (annotationText) => {
+                            console.log('Annotation text before saving:', annotationText);
+                            if (annotationText && annotationText.trim() !== '') {
+                                addAnnotation(recordId, annotationText.trim());
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Add event listener for "Delete Annotation" button
+            // Changed selector to target the button within annotation-item
+            document.querySelectorAll('.annotation-item .delete-annotation-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const recordId = e.currentTarget.dataset.recordId;
+                    const annotationIndex = parseInt(e.currentTarget.dataset.annotationIndex, 10);
+                    showModal('確認刪除批註', '您確定要刪除這條批註嗎？', {type: 'confirm', onConfirmCallback: () => {
+                        deleteAnnotation(recordId, annotationIndex);
+                    }});
+                });
+            });
+
+            // Add event listeners for annotation collapsible headers
+            document.querySelectorAll('.annotation-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    if (content) { // Ensure content exists
+                        header.classList.toggle('open');
+                        content.classList.toggle('open');
+                    }
+                });
+            });
+        }
+
+        function deleteRecord(id) {
+            let records = loadRecords();
+            records = records.filter(record => record.id !== id);
+            saveRecords(records);
+            displayRecords(); // Re-render the list
+            showModal('成功', '紀錄已成功刪除！');
+        }
+
+        // Function to add an annotation to a record
+        function addAnnotation(recordId, annotationText) {
+            let records = loadRecords();
+            const recordIndex = records.findIndex(r => r.id === recordId);
+            if (recordIndex !== -1) {
+                if (!records[recordIndex].annotations) {
+                    records[recordIndex].annotations = [];
+                }
+                records[recordIndex].annotations.push({
+                    text: annotationText,
+                    timestamp: new Date().toISOString()
+                });
+                saveRecords(records);
+                displayRecords(); // Re-render the list to show new annotation
+                showModal('成功', '批註已成功新增！');
+            } else {
+                showModal('錯誤', '找不到該紀錄。');
+            }
+        }
+
+        // Function to delete an annotation from a record
+        function deleteAnnotation(recordId, annotationIndex) {
+            let records = loadRecords();
+            const recordIndex = records.findIndex(r => r.id === recordId);
+            if (recordIndex !== -1 && records[recordIndex].annotations && records[recordIndex].annotations.length > annotationIndex) {
+                records[recordIndex].annotations.splice(annotationIndex, 1); // Remove the annotation
+                saveRecords(records);
+                displayRecords(); // Re-render the list to reflect the deletion
+                showModal('成功', '批註已成功刪除！');
+            } else {
+                showModal('錯誤', '找不到該批註。');
+            }
+        }
+
+
+        // --- Export Record as Image Function (修改為接收元素) ---
+        async function exportRecordAsImage(recordItemElement, hideAmount) {
+            showModal('匯出中', '正在生成圖片，請稍候...', {type: 'alert'}); // Show loading modal
+            let amountElements = [];
+
+            try {
+                // 如果選擇隱藏金額，則暫時隱藏相關元素
+                if (hideAmount) {
+                    // 只選擇具有 'export-amount-field' 類別的元素
+                    amountElements = recordItemElement.querySelectorAll('.export-amount-field');
+                    amountElements.forEach(el => el.classList.add('hide-amount'));
+                }
+
+                // Temporarily hide action buttons for cleaner image
+                const actionButtons = recordItemElement.querySelector('.record-actions');
+                if (actionButtons) {
+                    actionButtons.style.display = 'none';
+                }
+                // Also hide the add annotation button for export
+                const addAnnotationBtn = recordItemElement.querySelector('.annotation-section .add-annotation-btn');
+                if (addAnnotationBtn) {
+                    addAnnotationBtn.style.display = 'none';
+                }
+                // Hide delete annotation buttons
+                const deleteAnnotationBtns = recordItemElement.querySelectorAll('.annotation-item .delete-annotation-btn');
+                deleteAnnotationBtns.forEach(btn => btn.style.display = 'none');
+
+
+                const canvas = await html2canvas(recordItemElement, {
+                    scale: 3,                  // 已經是高解析度，通常足夠
+                    useCORS: true,             // 確保跨域資源能夠被正確加載
+                    backgroundColor: '#ffffff',// 確保背景是白色
+                    letterRendering: true,     // 啟用子像素文字渲染，提升文字清晰度
+                    imageTimeout: 0,           // 新增：禁用圖片加載超時，確保所有元素都能被渲染
+                    allowTaint: false          // 新增：禁用畫布污染，確保渲染完整性
+                });
+
+                // Restore action buttons visibility
+                if (actionButtons) {
+                    actionButtons.style.display = 'flex';
+                }
+                if (addAnnotationBtn) {
+                    addAnnotationBtn.style.display = 'block'; // Restore display for add annotation button
+                }
+                deleteAnnotationBtns.forEach(btn => btn.style.display = 'flex'); // Restore display for delete annotation buttons
+
+
+                // 匯出完成後，恢復金額元素的顯示
+                if (hideAmount) {
+                    amountElements.forEach(el => el.classList.remove('hide-amount'));
+                }
+
+                const image = canvas.toDataURL('image/jpeg', 0.4); // 改為 JPEG 格式，品質設定為 0.4 (可調整)
+                const link = document.createElement('a');
+                const recordId = recordItemElement.dataset.id;
+                const record = loadRecords().find(r => r.id === recordId);
+                const filename = record ? `${record.date}_${record.stockCode}_${record.stockName}.jpg` : `record_${recordId}.jpg`;
+                link.download = filename;
+                link.href = image;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showModal('成功', '卡片已成功匯出為圖片！');
+            } catch (error) {
+                console.error('Error exporting card as image:', error);
+                showModal('錯誤', '匯出圖片時發生錯誤：' + error.message);
+            } finally {
+                // 確保無論成功或失敗，都恢復金額元素的顯示
+                if (hideAmount && amountElements.length > 0) {
+                    amountElements.forEach(el => el.classList.remove('hide-amount'));
+                }
+                // Ensure all hidden elements are restored in finally block
+                const actionButtons = recordItemElement.querySelector('.record-actions');
+                if (actionButtons) {
+                    actionButtons.style.display = 'flex';
+                }
+                const addAnnotationBtn = recordItemElement.querySelector('.annotation-section .add-annotation-btn');
+                if (addAnnotationBtn) {
+                    addAnnotationBtn.style.display = 'block';
+                }
+                const deleteAnnotationBtns = recordItemElement.querySelectorAll('.annotation-item .delete-annotation-btn');
+                deleteAnnotationBtns.forEach(btn => btn.style.display = 'flex');
+            }
+        }
+
+        // --- 匯出選項 Modal 的事件監聽器 ---
+        confirmExportOptionsBtn.addEventListener('click', () => {
+            const hideAmount = hideAmountCheckbox.checked;
+            if (currentRecordItemToExport) {
+                exportRecordAsImage(currentRecordItemToExport, hideAmount);
+            }
+            exportOptionsModal.style.display = 'none'; // 隱藏匯出選項 modal
+        });
+
+        cancelExportOptionsBtn.addEventListener('click', () => {
+            exportOptionsModal.style.display = 'none'; // 隱藏匯出選項 modal
+            currentRecordItemToExport = null; // 清除儲存的元素
+        });
+
+
+        // --- Analysis Chart Logic ---
+        function renderAnalysisChart() {
+            const records = loadRecords();
+            const reasonCounts = {};
+
+            records.forEach(record => {
+                for (const key in record.failureReasons) {
+                    if (record.failureReasons.hasOwnProperty(key)) {
+                        const value = record.failureReasons[key];
+                        if (key.endsWith('Other')) {
+                            if (value && value.trim() !== '') {
+                                // For 'other' reasons, use the value itself for counting, but display name if available
+                                const displayKey = displayCategoryNames[key] || value; // Use display name if defined, otherwise raw value
+                                reasonCounts[displayKey] = (reasonCounts[displayKey] || 0) + 1;
+                            }
+                        } else if (Array.isArray(value)) {
+                            (value || []).forEach(reason => {
+                                // For checkbox reasons, use the display name for counting
+                                const displayReason = displayCategoryNames[reason] || reason;
+                                reasonCounts[displayReason] = (reasonCounts[displayReason] || 0) + 1;
+                            });
+                        }
+                    }
+                }
+            });
+
+            const chartData = Object.keys(reasonCounts).map(reason => ({
+                name: reason,
+                count: reasonCounts[reason],
+            })).sort((a, b) => b.count - a.count); // Sort by count descending
+
+            const barChartCanvas = document.getElementById('barChartCanvas');
+            const pieChartCanvas = document.getElementById('pieChartCanvas');
+            const barCtx = barChartCanvas.getContext('2d');
+            const pieCtx = pieChartCanvas.getContext('2d');
+
+            // Destroy previous chart instances if they exist
+            if (barChart) {
+                barChart.destroy();
+            }
+            if (pieChart) {
+                pieChart.destroy();
+            }
+
+            if (chartData.length === 0) {
+                barChartCanvas.style.display = 'none';
+                pieChartCanvas.style.display = 'none';
+                document.querySelector('.chart-container').style.display = 'none'; // Hide the whole chart container
+            } else {
+                barChartCanvas.style.display = 'block';
+                pieChartCanvas.style.display = 'block';
+                document.querySelector('.chart-container').style.display = 'block'; // Show the whole chart container
+
+                // Bar Chart
+                barChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.map(d => d.name),
+                        datasets: [{
+                            label: '出現次數',
+                            data: chartData.map(d => d.count),
+                            backgroundColor: 'rgba(176, 216, 240, 0.8)', /* Soft pastel blue with transparency */
+                            borderColor: 'rgba(176, 216, 240, 1)',
+                            borderWidth: 1,
+                            borderRadius: 12, /* More rounded bars */
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'x', // Vertical bars
+                        plugins: {
+                            legend: {
+                                display: false, // Hide legend for single dataset
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y;
+                                    }
+                                },
+                                backgroundColor: 'rgba(80, 80, 80, 0.8)', /* Darker, softer tooltip background */
+                                titleFont: { size: 15, weight: '600' },
+                                bodyFont: { size: 15 },
+                                padding: 12,
+                                borderRadius: 8,
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: false,
+                                    text: '失敗原因'
+                                },
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 45,
+                                    minRotation: 45,
+                                    font: {
+                                        size: 12, /* Slightly larger font for x-axis labels */
+                                        weight: '500'
+                                    },
+                                    color: '#666666' /* Softer color for ticks */
+                                },
+                                grid: {
+                                    display: false /* Hide x-axis grid lines */
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: '次數',
+                                    font: {
+                                        size: 15,
+                                        weight: '600'
+                                    },
+                                    color: '#666666'
+                                },
+                                ticks: {
+                                    precision: 0, // Ensure integer ticks
+                                    font: {
+                                        size: 13, /* Slightly larger font for y-axis labels */
+                                    },
+                                    color: '#666666'
+                                },
+                                grid: {
+                                    color: '#f0f0f0' /* Lighter grid lines */
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Pie Chart
+                const pieColors = [
+                    '#b0d8f0', '#ffb0b0', '#b0f0d0', '#f0d8b0', '#d8b0f0', /* Soft pastels */
+                    '#a8dadc', '#e63946', '#457b9d', '#f4a261', '#2a9d8f', /* Slightly bolder */
+                    '#c7e9b4', '#fec8d8', '#a2d2ff', '#ffafcc', '#cdb4db' /* More variety */
+                ];
+
+                pieChart = new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: chartData.map(d => d.name),
+                        datasets: [{
+                            data: chartData.map(d => d.count),
+                            backgroundColor: chartData.map((_, i) => pieColors[i % pieColors.length]),
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right', // Place legend on the right
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: '500'
+                                    },
+                                    color: '#4a4a4a',
+                                    padding: 15,
+                                    boxWidth: 20,
+                                    boxHeight: 20,
+                                    usePointStyle: true, // Use circles for legend items
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((sum, current) => sum + current, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1) + '%';
+                                        return `${label}: ${value} (${percentage})`;
+                                    }
+                                },
+                                backgroundColor: 'rgba(80, 80, 80, 0.8)',
+                                titleFont: { size: 15, weight: '600' },
+                                bodyFont: { size: 15 },
+                                padding: 12,
+                                borderRadius: 8,
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Check overall data availability for analysis page
+            if (records.length === 0 || chartData.length === 0) {
+                noOverallAnalysisDataMessage.style.display = 'block';
+                totalLossContainer.style.display = 'none'; // Hide total loss container if no data
+            } else {
+                noOverallAnalysisDataMessage.style.display = 'none';
+                totalLossContainer.style.display = 'block'; // Show total loss container
+            }
+        }
+
+
+        // --- 新增：渲染失敗原因統計表格 ---
+        function renderReasonStatisticsTable() {
+            const records = loadRecords();
+            const reasonCounts = {};
+
+            records.forEach(record => {
+                for (const key in record.failureReasons) {
+                    if (record.failureReasons.hasOwnProperty(key)) {
+                        const value = record.failureReasons[key];
+                        if (key.endsWith('Other')) {
+                            if (value && value.trim() !== '') {
+                                // For 'other' reasons, use the value itself for counting, but display name if available
+                                const displayKey = displayCategoryNames[key] || value;
+                                reasonCounts[displayKey] = (reasonCounts[displayKey] || 0) + 1;
+                            }
+                        } else if (Array.isArray(value)) {
+                            (value || []).forEach(reason => {
+                                // For checkbox reasons, use the display name for counting
+                                const displayReason = displayCategoryNames[reason] || reason;
+                                reasonCounts[displayReason] = (reasonCounts[displayReason] || 0) + 1;
+                            });
+                        }
+                    }
+                }
+            });
+
+            const tableData = Object.keys(reasonCounts).map(reason => ({
+                name: reason,
+                count: reasonCounts[reason],
+            })).sort((a, b) => b.count - a.count); // 依次數高至低排序
+
+            reasonStatisticsTableDiv.innerHTML = ''; // 清空舊的表格內容
+
+            if (tableData.length === 0) {
+                statisticsTableContainer.style.display = 'none';
+                return;
+            }
+
+            statisticsTableContainer.style.display = 'block';
+
+            const table = document.createElement('table');
+            table.classList.add('statistics-table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>失敗原因</th>
+                        <th>出現次數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableData.map(item => `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.count}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            reasonStatisticsTableDiv.appendChild(table);
+        }
+
+        // --- 新增：匯出表格為圖片函數 ---
+        exportTableImageBtn.addEventListener('click', async () => {
+            const containerToExport = document.getElementById('statisticsTableContainer');
+            showModal('匯出中', '正在生成圖片，請稍候...', {type: 'alert'});
+
+            try {
+                // 暫時隱藏按鈕，並添加用於截圖的樣式
+                const exportButton = document.getElementById('exportTableImageBtn');
+                if (exportButton) exportButton.style.display = 'none';
+
+                containerToExport.classList.add('capture-ready');
+
+                // 添加下載日期文字
+                const dateElement = document.createElement('div');
+                dateElement.classList.add('hidden-date');
+                const now = new Date();
+                dateElement.textContent = `匯出日期: ${now.getFullYear()}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                containerToExport.appendChild(dateElement);
+
+
+                const canvas = await html2canvas(containerToExport, {
+                    scale: 3, // 提高解析度
+                    useCORS: true,
+                    backgroundColor: '#ffffff' // 確保背景為白色
+                });
+
+                // 恢復原始狀態
+                if (exportButton) exportButton.style.display = 'block';
+                containerToExport.classList.remove('capture-ready');
+                containerToExport.removeChild(dateElement); // 移除日期文字
+
+                const image = canvas.toDataURL('image/jpeg', 0.9);
+                const link = document.createElement('a');
+                const filename = `失敗原因統計_${new Date().toISOString().split('T')[0]}.jpg`;
+                link.download = filename;
+                link.href = image;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showModal('成功', '表格已成功匯出為圖片！');
+            } catch (error) {
+                console.error('Error exporting table as image:', error);
+                showModal('錯誤', '匯出圖片時發生錯誤：' + error.message);
+            }
+        });
+
+
+        // --- Collapsible Sections Logic ---
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                if (content) { // Ensure content exists
+                    header.classList.toggle('open');
+                    content.classList.toggle('open');
+                }
+            });
+        });
+
+        // --- Backup / Restore Functions ---
+        exportBackupBtn.addEventListener('click', () => {
+            const records = loadRecords();
+            const customUserName = getAppTitle(); // 取得使用者自定義的名稱
+            const exportData = {
+                userName: customUserName,
+                records: records
+            };
+            console.log('Records to be exported:', records); 
+            const dataStr = JSON.stringify(exportData, null, 2); // Pretty print JSON
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `韭菜血淚史_備份_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showModal('匯出成功', '您的紀錄已成功匯出為 JSON 備份檔案。');
+        });
+
+        importBackupBtn.addEventListener('click', () => {
+            importFileInput.click(); // Trigger hidden file input click
+        });
+
+ importFileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const fileContent = e.target.result;
+                    console.log('Raw file content (原始檔案內容):', fileContent); // 輸出原始檔案內容
+
+                    const fullImportedData = JSON.parse(fileContent);
+                    console.log('Parsed fullImportedData (解析後的資料):', fullImportedData); // 輸出解析後的資料
+                    console.log('Is fullImportedData an Array (舊格式)?', Array.isArray(fullImportedData)); // 判斷是否為陣列 (舊格式)
+                    console.log('Is fullImportedData an Object with records array (新格式)?', typeof fullImportedData === 'object' && fullImportedData !== null && Array.isArray(fullImportedData.records)); // 判斷是否為物件且包含 records 陣列 (新格式)
+
+                    let recordsToImport = [];
+                    let userNameToSet = getAppTitle(); // 預設使用App目前的使用者名稱
+
+                    // 判斷備份檔案格式
+                    if (Array.isArray(fullImportedData)) {
+                        // 舊格式：fullImportedData 本身就是紀錄陣列
+                        console.log('Detected old format (偵測到舊格式).');
+                        recordsToImport = fullImportedData;
+                        // 舊格式不包含 userName，所以 userNameToSet 保持 App 目前的名稱
+                    } else if (typeof fullImportedData === 'object' && fullImportedData !== null && Array.isArray(fullImportedData.records)) {
+                        // 新格式：fullImportedData 是一個物件，包含 'records' 和 'userName'
+                        console.log('Detected new format (偵測到新格式).');
+                        recordsToImport = fullImportedData.records;
+                        userNameToSet = fullImportedData.userName || '999'; // 從備份中取得使用者名稱，如果沒有則預設為 '999'
+                    } else {
+                        // 無效的格式
+                        console.error('Invalid backup file format detected (偵測到無效的備份檔案格式).');
+                        showModal('匯入失敗', '備份檔案格式不正確，請確認檔案內容。');
+                        return;
+                    }
+
+                    // 對解析出來的紀錄陣列進行基本驗證
+                    if (!recordsToImport.every(record =>
+                        typeof record === 'object' && record !== null && // 確保 record 是一個非空的物件
+                        typeof record.id === 'string' &&
+                        typeof record.date === 'string' &&
+                        typeof record.stockCode === 'string'
+                    )) {
+                        console.error('Backup file content incomplete or malformed records (備份檔案內容不完整或紀錄格式有誤).');
+                        showModal('匯入失敗', '備份檔案內容不完整或格式有誤。');
+                        return;
+                    }
+
+                    showModal('確認匯入', '這將覆蓋您現有的所有紀錄，確定要繼續嗎？', {type: 'confirm', onConfirmCallback: () => {
+                        saveRecords(recordsToImport);
+                        // 可選：匯入成功後，是否要將備份中的使用者名稱設定為當前 App 的名稱
+                        // 如果你希望匯入備份時，App 標題也跟著變，可以取消註解下面這行
+                        setAppTitle(userNameToSet); // 這會更新 UI 和 localStorage
+                        displayRecords(); // 刷新列表
+                        showModal('匯入成功', '紀錄已成功從備份檔案匯入！');
+                    }});
+
+                } catch (error) {
+                    showModal('匯入失敗', '讀取或解析備份檔案時發生錯誤：' + error.message);
+                    console.error('Error importing backup (匯入備份時發生錯誤):', error);
+                }
+                // 清除檔案輸入值，以便再次匯入相同檔案
+                event.target.value = '';
+            };
+            reader.onerror = () => {
+                showModal('匯入失敗', '讀取檔案時發生錯誤。');
+            };
+            reader.readAsText(file);
+        });
+
+        // --- New Logic for Conditional Display of Outcome Fields ---
+        function toggleOutcomeDetails() {
+            const selectedValue = errorDecisionResultSelect.value;
+
+            // Reset visibility and required attributes
+            outcomeDetailsDiv.style.display = 'none';
+            daysTrappedGroup.style.display = 'none';
+            outcomeAmountInput.removeAttribute('required');
+            returnRateInput.removeAttribute('required');
+            daysTrappedInput.removeAttribute('required');
+
+            // ONLY reset values if not in editing mode (currentEditingRecordId is null)
+            // This is the key change to prevent clearing values when populating for edit.
+            if (!currentEditingRecordId) {
+                outcomeAmountInput.value = '';
+                returnRateInput.value = '';
+                daysTrappedInput.value = '';
+            }
+
+            if (selectedValue) { // If any option is selected
+                outcomeDetailsDiv.style.display = 'grid'; // Show the container for amount and return rate
+                outcomeAmountInput.setAttribute('required', 'true');
+                returnRateInput.setAttribute('required', 'true');
+
+                // 根據新的選項名稱調整邏輯
+                if (selectedValue === '套牢中等解套' || selectedValue === '套牢很久後，終於停損') {
+                    daysTrappedGroup.style.display = 'block'; // Show days trapped for these options
+                    daysTrappedInput.setAttribute('required', 'true');
+                }
+                // '少賺' 和 '遵守紀律，停損出場' 不會觸發 daysTrappedGroup 的顯示
+            }
+        }
+
+        // Add event listener for the new select element
+        errorDecisionResultSelect.addEventListener('change', toggleOutcomeDetails);
+
+        // Add event listener for outcomeAmountInput to format number with commas
+        outcomeAmountInput.addEventListener('input', (event) => {
+            // Remove non-digit characters first, then format
+            const rawValue = event.target.value.replace(/[^0-9]/g, '');
+            if (rawValue) {
+                event.target.value = formatNumberWithCommas(parseInt(rawValue, 10));
+            } else {
+                event.target.value = '';
+            }
+        });
+
+
+        // --- Filter and Sort Event Listeners ---
+        applyFiltersBtn.addEventListener('click', displayRecords);
+        clearFiltersBtn.addEventListener('click', () => {
+            filterIncidentMonthStartInput.value = '';
+            filterIncidentMonthEndInput.value = '';
+            filterStockNameInput.value = '';
+            filterErrorDecisionTypeSelect.value = '';
+            filterOperationTypeSelect.value = '';
+            sortOrderSelect.value = 'incidentMonthDesc'; // Reset to default sort
+            displayRecords();
+        });
+        sortOrderSelect.addEventListener('change', displayRecords);
+
+
+        // --- New Loss Calculation Functions ---
+
+        // Function to set up the checkboxes for loss calculation
+        function setupLossCalculation() {
+            lossCalculationCheckboxesDiv.innerHTML = ''; // Clear existing checkboxes
+
+            errorDecisionResultOptions.forEach(option => {
+                const label = document.createElement('label');
+                label.classList.add('checkbox-group-item'); // Use a class for potential styling
+                label.innerHTML = `
+                    <input type="checkbox" name="lossScenario" value="${option}"> ${displayCategoryNames[option] || option}
+                `;
+                lossCalculationCheckboxesDiv.appendChild(label);
+            });
+
+            // Add event listeners to all newly created checkboxes
+            document.querySelectorAll('#lossCalculationCheckboxes input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', calculateTotalLoss);
+            });
+
+            // Initial calculation
+            calculateTotalLoss();
+        }
+
+        // Function to calculate and display total loss
+        function calculateTotalLoss() {
+            const records = loadRecords();
+            const selectedScenarios = Array.from(document.querySelectorAll('#lossCalculationCheckboxes input[type="checkbox"]:checked'))
+                                            .map(checkbox => checkbox.value);
+
+            let totalAmount = 0;
+            let hasProfit = false; // Track if any selected scenario results in profit
+
+            records.forEach(record => {
+                if (selectedScenarios.includes(record.errorDecisionResult)) {
+                    const amount = record.outcomeAmount;
+                    const returnRate = record.returnRate;
+
+                    // Only consider valid numbers for summation
+                    if (typeof amount === 'number' && !isNaN(amount)) {
+                        // For '少賺', '遵守紀律，停損出場', '套牢很久後，終於停損', these are generally losses or missed gains
+                        // For '套牢中等解套', it depends on the returnRate
+                        if (record.errorDecisionResult === '套牢中等解套') {
+                            if (typeof returnRate === 'number' && !isNaN(returnRate)) {
+                                if (returnRate < 0) {
+                                    totalAmount += amount; // Add to loss if return rate is negative
+                                } else {
+                                    // If returnRate is 0 or positive, it's a "profit" or break-even in this context
+                                    totalAmount += amount; // Still add the amount, but mark as profit scenario
+                                    if (amount > 0) hasProfit = true; // Mark if it's a positive amount (actual profit)
+                                }
+                            } else {
+                                // If returnRate is not available for '套牢中等解套', treat as neutral or include as loss if amount is negative
+                                totalAmount += amount;
+                            }
+                        } else {
+                            totalAmount += amount; // For other selected loss scenarios, directly add the amount
+                        }
+                    }
+                }
+            });
+
+            totalLossDisplayDiv.innerHTML = `總計金額：<br> NT$ ${formatNumberWithCommas(totalAmount)}`;
+            
+            // Apply color based on total amount (green for loss, red for profit)
+            if (totalAmount < 0) {
+                totalLossDisplayDiv.classList.remove('profit');
+            } else if (totalAmount > 0) {
+                totalLossDisplayDiv.classList.add('profit');
+            } else {
+                totalLossDisplayDiv.classList.remove('profit'); // Remove if it's zero
+            }
+        }
+
+        // --- App Title Customization Logic ---
+        function getAppTitle() {
+            // 從 localStorage 讀取自定義名稱，如果沒有則預設為 '999'
+            return localStorage.getItem('customName') || '999';
+        }
+
+        function setAppTitle(name) {
+            localStorage.setItem('customName', name);
+            updateAppTitles(name);
+        }
+
+        function updateAppTitles(customName) {
+            // 更新應用程式主標題
+            appTitleDisplay.textContent = `韭菜${customName}的錯題本`;
+            // 更新列表頁面標題
+            recordListTitle.textContent = `${customName}的血淚史`;
+            // 更新分析頁面標題
+            analysisPageTitle.textContent = `${customName}的分析報告`;
+            // 更新統計表格標題
+            statisticsTableTitle.textContent = `${customName}失敗原因一覽`;
+            // 更新網頁標題
+            document.title = `韭菜${customName}的錯題本`;
+        }
+
+        editAppTitleBtn.addEventListener('click', () => {
+            appTitleDisplay.style.display = 'none';
+            appTitleInput.style.display = 'inline-block';
+            // 編輯時，輸入框只顯示「OO」部分
+            appTitleInput.value = getAppTitle(); 
+            appTitleInput.focus();
+        });
+
+        appTitleInput.addEventListener('blur', () => {
+            const newName = appTitleInput.value.trim();
+            if (newName) {
+                setAppTitle(newName);
+            } else {
+                setAppTitle('999'); // 如果為空，則恢復預設名稱 '999'
+            }
+            appTitleDisplay.style.display = 'inline-block';
+            appTitleInput.style.display = 'none';
+        });
+
+        appTitleInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                appTitleInput.blur(); // Trigger blur to save
+            }
+        });
+
+
+        // --- Event Listeners for Navigation ---
+        showFormBtn.addEventListener('click', () => showPage('recordFormPage'));
+        showListBtn.addEventListener('click', () => showPage('recordListPage'));
+        showAnalysisBtn.addEventListener('click', () => showPage('analysisPage'));
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load and set the app title
+            updateAppTitles(getAppTitle());
+
+            showPage('recordFormPage');
+            // Set default date for form (hidden field)
+            document.getElementById('date').value = new Date().toISOString().split('T')[0]; 
+            // Set default incident month to current month
+            const today = new Date();
+            const currentMonth = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}`;
+            incidentMonthInput.value = currentMonth;
+
+            toggleOutcomeDetails(); // Ensure initial state of new fields is correct
+        });
+
+    </script>
+</body>
+</html>
